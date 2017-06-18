@@ -16,6 +16,8 @@ for file in split(glob(g:vim_home . '/config/**.vim'), '\n')
 endfor
 ```
 
+(Okay, so this wasn’t exactly my idea. I stumbled upon a blog post with a variant of this method years ago and can’t find it now, which makes me a little sad, because credit-where-credit-is-due and all, but let’s not beat ourselves up over it.)
+
 Portability
 -----------
 
