@@ -1,0 +1,15 @@
+#! /bin/bash
+
+vimrc=$(cd $(dirname $0)/.. ; find $(pwd -P) -name vimrc)
+gvimrc=$(cd $(dirname $0)/.. ; find $(pwd -P) -name gvimrc)
+
+if type gvim >/dev/null 2>&1; then
+  vimbin=gvim
+elif type mvim >/dev/null 2>&1; then
+  vimbin=mvim
+else
+  echo "gvim: not found"
+  exit 1
+fi
+
+$vimbin -Nu "$vimrc" -U "$gvimrc" --cmd "let &rtp = substitute(&rtp, \"$HOME/.vim\", \"$HOME/.config/vim\", 'g')" $*
