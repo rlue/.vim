@@ -2,14 +2,15 @@
 
 vimrc=$(cd $(dirname $0)/.. ; find $(pwd -P) -name vimrc)
 gvimrc=$(cd $(dirname $0)/.. ; find $(pwd -P) -name gvimrc)
+vimhome=$(cd "$(dirname $0)/.."; pwd)
 
-if type gvim >/dev/null 2>&1; then
+if hash gvim 2>/dev/null; then
   vimbin=gvim
-elif type mvim >/dev/null 2>&1; then
+elif hash mvim 2>/dev/null; then
   vimbin=mvim
 else
-  echo "gvim: not found"
+  echo >&2 "gvim: not found"
   exit 1
 fi
 
-$vimbin -Nu "$vimrc" -U "$gvimrc" --cmd "let &rtp = substitute(&rtp, \"$HOME/.vim\", \"$HOME/.config/vim\", 'g')" $*
+$vimbin -Nu "$vimrc" -U "$gvimrc" --cmd "let &rtp = substitute(&rtp, \"$HOME/.vim\", \"$vimhome\", 'g')" $*

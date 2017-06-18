@@ -1,4 +1,11 @@
 #! /bin/bash
 
-vimrc=$(cd $(dirname $0)/.. ; find $(pwd -P) -name vimrc)
-vim -Nu "$vimrc" --cmd "let &rtp = substitute(&rtp, \"$HOME/.vim\", \"$HOME/.config/vim\", 'g')" $*
+vimrc=$(cd "$(dirname $0)/.." ; find $(pwd -P) -name vimrc)
+vimhome=$(cd "$(dirname $0)/.."; pwd)
+
+if ! hash vim 2>/dev/null; then
+  echo >&2 "vim: not found"
+  exit 1
+fi
+
+vim -Nu "$vimrc" --cmd "let &rtp = substitute(&rtp, \"$HOME/.vim\", \"$vimhome\", 'g')" $*
