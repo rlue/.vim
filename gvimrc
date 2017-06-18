@@ -1,8 +1,8 @@
 " GUI VIM CONFIGURATION
 
 set guioptions=                           " Disable GUI chrome 
-colorscheme papercolor
-AirlineTheme papercolor
+if !empty(globpath(&rtp, 'colors/papercolor.vim')) | colorscheme papercolor | endif
+if exists(':AirlineTheme') | AirlineTheme papercolor | endif
 set bg=light
 " set lines=999 columns=85
 

@@ -1,7 +1,7 @@
 " This file contains adjustments to visual elements of the vim interface.
 
 " Everyone's favorite colorscheme
-colorscheme solarized
+if !empty(globpath(&rtp, 'colors/solarized.vim')) | colorscheme solarized | endif
 if exists('+background')     | set background=dark | endif
 
 " Enable syntax highlighting, but limit on very long lines

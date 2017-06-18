@@ -8,7 +8,8 @@ if exists('+wildcharm') | set wildcharm=<C-z> | endif
 " $MYVIMRC source/edit
 nnoremap <Leader>ev :e'e ' . g:vim_home . '/**/'<CR>
 nnoremap <silent> <Leader>sv :call UpdateRCs() <Bar> source $MYVIMRC <Bar>
-            \ if has('gui_running') <Bar> source $MYGVIMRC <Bar> endif<CR>
+            \ if has('gui_running') <Bar> source $MYGVIMRC <Bar> endif<Bar>
+            \ if exists(':AirlineRefresh') <Bar> AirlineRefresh <Bar> endif<CR>
 
 " Save all open vimrc buffers, then source vimrc
 function! UpdateRCs()
