@@ -7,10 +7,29 @@ if &viminfo !~# ',n'              " Store viminfo within .vim/
   let &viminfo .= ',n' . g:vim_home . '/viminfo'
 endif
 
+" Remove files from path which have not been modified for 31 days
+" (https://gist.github.com/mllg/5353184)
+function! Tmpwatch(path, days)
+  let l:path = expand(a:path)
+  if isdirectory(l:path)
+    for file in split(glob(l:path . '/*'), "\n")
+      if localtime() > getftime(file) + 86400 * a:days && delete(file) != 0
+        echoerr "Tmpwatch(): Error deleting '" . file . "'"
+      endif
+    endfor
+  else
+    echoerr "Tmpwatch(): Directory '" . l:path . "' not found"
+  endif
+endfunction
+
 if has('persistent_undo')         " Store vimundo within .vim/
-    set undolevels=5000
-    let &undodir = g:vim_home . '/vimundo'
-    set undofile
+  set undofile
+  set undolevels=5000
+  if !isdirectory(g:vim_home . '/vimundo')
+    call mkdir(g:vim_home . '/vimundo')
+  endif
+  let &undodir = g:vim_home . '/vimundo'
+  call Tmpwatch(&undodir, 30)
 endif
 
 " ENCRYPTION -------------------------------------------------------------------
