@@ -21,7 +21,7 @@ endfor
 Portability
 -----------
 
-There may be times when you want to fire up your vim config on someone else’s computer. Maybe you had to borrow your friend’s laptop because you forgot your charger. Maybe you’re asked to do a live coding challenge in an interview, and the chump on the other side of the table just dropped you into SublimeText. Maybe you’re offering impromptu tech support to your crush, and this is your chance to show her what a fucking wizard you are.
+There may be times when you want to fire up your vim config on someone else’s computer. Maybe you had to borrow your friend’s laptop because you forgot your charger. Maybe you’re asked to do a live coding challenge in an interview, and the chump on the other side of the table just dropped you into SublimeText. Maybe you’re offering impromptu tech support to your crush, and this is your big chance to show her what a fucking wizard you are.
 
 In any case, it can be done — but it usually involves getting all jumbled up in someone else’s dotfiles. The other way (_i.e.,_ the polite way) involves passing some command line flags to vim to specify an alternate `vimrc` and runtime path:
 
