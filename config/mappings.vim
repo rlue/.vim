@@ -65,14 +65,6 @@ for char in [ '_', '-', '.', ':', ',', ';', '<bar>',
   execute 'onoremap a' . char . ' :normal va' . char . '<CR>'
 endfor
 
-" " Auto-expanding, courtesy of -romainl-
-" inoremap (; (<CR>);<C-[>O
-" inoremap (, (<CR>),<C-[>O
-" inoremap {; {<CR>};<C-[>O
-" inoremap {, {<CR>},<C-[>O
-" inoremap [; [<CR>];<C-[>O
-" inoremap [, [<CR>],<C-[>O
-
 " BUFFER MANAGEMENT ------------------------------------------------------------
 " Save
 nnoremap <Leader>w :update<CR>
@@ -95,7 +87,7 @@ nnoremap <C-w><C-j> <C-w>j<C-w>_<C-w><Bar>
 nnoremap <C-w><C-k> <C-w>k<C-w>_<C-w><Bar>
 nnoremap <C-w><C-l> <C-w>l<C-w>_<C-w><Bar>
 
-" FILE MANAGEMENT
+" FILE MANAGEMENT --------------------------------------------------------------
 if isdirectory($HOME . '/Documents/Notes')
   nnoremap <Leader>en :e ~/Documents/Notes/**/
 endif
@@ -110,7 +102,7 @@ noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
 " " Find cursor
-" nnoremap <silent> <Leader><Space> :call FlashLine()<CR>
+" nnoremap <silent> <Leader><Leader> :call FlashLine()<CR>
 " function! FlashLine()
 "   for i in [30, 50, 30, 250]
 "     set cursorline!
