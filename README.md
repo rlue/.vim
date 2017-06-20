@@ -38,11 +38,11 @@ let $MYGVIMRC  = g:vim_home . '/gvimrc'
 ...
 ```
 
-(The number on the right indicates how many non-blank lines there are in the fold.)
+The number in brackets on the right indicates how many lines of code (_i.e.,_ non-blank, non-comment) there are in the fold.
 
 I used to have all these sections [broken out as separate files, stored in a `config/` directory and source in a `for` loop in `vimrc`][modularity]. That was pretty good, and [romainl even pointed out that I could just put them in a `plugin/` directory and ditch the `for` loop altogether][romainl], but I like this even better. 
 
-`ftplugin/vim.vim` is where the magic happens. Headings are any commented lines exactly 80 characters long ending in a space followed by string of `=`/`-` characters. Functions get folded, too.
+`ftplugin/vim.vim` is where the magic happens. Headings are any commented lines exactly 80 characters long, ending in a space followed by string of `=` or `-` characters. Functions get folded, too.
 
 Portability
 -----------
@@ -73,7 +73,7 @@ With this, you can test drive my vim config, no strings attached, and get things
 $ rm -rf ~/Downloads/vim
 ```
 
-(All the settings in the `config/` directory have been written to maximize compatibility with various versions of vim you may encounter which, for instance, may not have been compiled with clipboard support.)
+(All the settings in `vimrc` have been written to maximize compatibility with various versions of vim you may encounter which, for instance, may not have been compiled with clipboard support.)
 
 [modularity]: https://github.com/rlue/.vim/blob/4363cea2d762d895ee9e6b69acc2184fc0b9a597/README.md#modularity
 [romainl]: https://www.reddit.com/r/vim/comments/6hz4il/two_good_ideas_for_your_vim_config_building_in/dj2ule0/
