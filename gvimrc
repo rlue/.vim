@@ -7,7 +7,7 @@ set bg=light
 " set lines=999 columns=85
 
 if hostname() =~# 'sardanapalus'
-  set guifont=Source\ Code\ Pro\ Light:h17
+  set guifont=PragmataPro:h14
 elseif hostname() =~# 'liberte'
   set guifont=Source\ Code\ Pro:h17
 else

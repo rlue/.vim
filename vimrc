@@ -78,9 +78,9 @@ nnoremap <C-w><C-l> <C-w>l<C-w>_<C-w><Bar>
 if isdirectory($HOME . '/Documents/Notes')
   nnoremap <Leader>en :e ~/Documents/Notes/**/
 endif
-if isdirectory($HOME . '/Projects/rlue.github.io')
-  nnoremap <Leader>eb :e ~/Projects/rlue.github.io/_drafts/**/
-endif
+" if isdirectory($HOME . '/Projects/rlue.github.io')
+"   nnoremap <Leader>eb :e ~/Projects/rlue.github.io/_drafts/**/
+" endif
 
 " NAVIGATION -------------------------------------------------------------------
 
@@ -162,6 +162,7 @@ call plug#begin()
 
 Plug        'jaxbot/browserlink.vim'
 Plug      'junegunn/goyo.vim'
+Plug       'morhetz/gruvbox'
 Plug      'junegunn/limelight.vim'
 Plug     'NLKNguyen/papercolor-theme'
 Plug 'vim-syntastic/syntastic'
@@ -188,127 +189,152 @@ Plug         'tpope/vim-speeddating'
 Plug         'tpope/vim-surround'
 Plug          'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
 Plug         'tpope/vim-unimpaired'
-" Plug 'w0rp/ale'
+
+if executable('fzf') && v:version >= 740
+  Plug isdirectory('/usr/local/opt/fzf') ?
+              \ '/usr/local/opt/fzf' :
+              \ 'junegunn/fzf', { 'dir': '~/.fzf' }
+  Plug 'junegunn/fzf.vim'
+endif
 
 call plug#end()
 
 " BROWSERLINK ------------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/browserlink.vim'))
+  let g:bl_no_mappings   = 1        " Disable default mappings
 
-let g:bl_no_mappings   = 1        " Disable default mappings
+  " Override BL's built-in autocmd (give Jekyll time to rebuild before first)
+  let g:bl_no_autoupdate = 1
+  let s:delay_interval   = '1500m'
+  let s:bl_pagefileexts  = 
+        \ [ 'html' , 'js'     , 'php'  ,
+        \   'css'  , 'scss'   , 'sass' ,
+        \   'slim' , 'liquid' , 'md'     ]
 
-" Override BL's built-in autocmd (give Jekyll time to rebuild before reloading)
-let g:bl_no_autoupdate = 1
-let s:delay_interval   = '1500m'
-let s:bl_pagefileexts  = 
-      \ [ 'html' , 'js'     , 'php'  ,
-      \   'css'  , 'scss'   , 'sass' ,
-      \   'slim' , 'liquid' , 'md'     ]
+  augroup browserlink
+    autocmd!
+    exec 'autocmd BufWritePost *.' . join(s:bl_pagefileexts,',*.') .
+                \ ' call s:trigger_reload("' . expand('%:p:h') . '")'
+  augroup END
 
-augroup browserlink
-  autocmd!
-  exec 'autocmd BufWritePost *.' . join(s:bl_pagefileexts,',*.') .
-              \ ' call s:trigger_reload("' . expand('%:p:h') . '")'
-augroup END
+  function! s:trigger_reload(dir)
+    if filereadable(a:dir . '/_config.yml')         " in a Jekyll project root
+      exec 'sleep ' . s:delay_interval
+    elseif a:dir =~# $HOME . '\S\+'                 " somewhere inside home
+      call s:trigger_reload(fnamemodify(a:dir, ':h'))
+      return 0
+    endif
 
-function! s:trigger_reload(dir)
-  if filereadable(a:dir . '/_config.yml')         " in a Jekyll project root
-    exec 'sleep ' . s:delay_interval
-  elseif a:dir =~# $HOME . '\S\+'                 " somewhere inside home
-    call s:trigger_reload(fnamemodify(a:dir, ':h'))
-    return 0
-  endif
+    execute expand('%:e:e') =~? 'css' ? 'BLReloadCSS' : 'BLReloadPage' 
+  endfunction
+endif
 
-  execute expand('%:e:e') =~? 'css' ? 'BLReloadCSS' : 'BLReloadPage' 
-endfunction
+" FZF --------------------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/fzf.vim')) && executable('fzf')
+  nnoremap <Leader>ef :Files<CR>
+  nnoremap <Leader>eb :Buffers<CR>
+endif
 
 " LIMELIGHT --------------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/limelight.vim'))
+  let g:limelight_default_coefficient = 0.7   " Set deeper default shading
 
-let g:limelight_default_coefficient = 0.7   " Set deeper default shading
-
-augroup goyo_ll
-  autocmd!
-  autocmd User GoyoEnter Limelight           " Tie Limelight to Goyo
-  autocmd User GoyoLeave Limelight!
-augroup END
+  augroup goyo_ll
+    autocmd!
+    autocmd User GoyoEnter Limelight           " Tie Limelight to Goyo
+    autocmd User GoyoLeave Limelight!
+  augroup END
+endif
 
 " SYNTASTIC --------------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/syntastic.vim'))
+  let g:syntastic_ruby_checkers = ['rubocop']
+  let g:syntastic_slim_checkers = ['slim_lint']
+  let g:syntastic_vim_checkers  = ['vint']
+  let g:syntastic_scss_checkers = ['sass_lint']
+  let g:syntastic_mode_map      = { 'mode':              'passive',
+              \                     'active_filetypes':  [],
+              \                     'passive_filetypes': [''] }
 
-let g:syntastic_ruby_checkers = ['rubocop']
-let g:syntastic_slim_checkers = ['slim_lint']
-let g:syntastic_vim_checkers  = ['vint']
-let g:syntastic_scss_checkers = ['sass_lint']
-let g:syntastic_mode_map      = { 'mode':              'active',
-            \                     'active_filetypes':  [],
-            \                     'passive_filetypes': [''] }
+  " per https://github.com/Kuniwak/vint/issues/198
+  let g:syntastic_vim_vint_exe = 'LC_CTYPE=UTF-8 vint'
 
-" per https://github.com/Kuniwak/vint/issues/198
-let g:syntastic_vim_vint_exe = 'LC_CTYPE=UTF-8 vint'
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_check_on_wq = 0
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_check_on_wq = 0
+  " " Close location list (i.e., error list) on :bd
+  " cabbrev <silent> bd <C-r>=(getcmdtype()==#':' && getcmdpos()==1 ? 
+  "                            \ 'lclose\|bdelete' : 'bd')<CR>
 
-" " Close location list (i.e., error list) on :bd
-" cabbrev <silent> bd <C-r>=(getcmdtype()==#':' && getcmdpos()==1 ? 
-"                            \ 'lclose\|bdelete' : 'bd')<CR>
-
-nnoremap <Leader>sc :SyntasticCheck<CR>
-nnoremap <Leader>st :SyntasticToggleMode<CR>
+  nnoremap <Leader>sc :SyntasticCheck<CR>
+  nnoremap <Leader>st :SyntasticToggleMode<CR>
+endif
 
 " VIM-AIRLINE ------------------------------------------------------------------
-
-let g:airline_powerline_fonts                   = 1
-let g:airline#extensions#whitespace#enabled     = 0
-let g:airline#extensions#tabline#enabled        = 1
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline_theme                             = 'solarized'
+if !empty(globpath(&rtp, '/plugin/airline.vim'))
+  let g:airline_powerline_fonts                   = 1
+  let g:airline#extensions#whitespace#enabled     = 0
+  let g:airline#extensions#tabline#enabled        = 1
+  let g:airline#extensions#tabline#buffer_nr_show = 1
+  let g:airline_theme                             = 'solarized'
+endif
 
 " VIM-DIRVISH ------------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/dirvish.vim'))
+  " Disable netrw
+  let g:loaded_netrwPlugin = 1
 
-" Disable netrw
-let g:loaded_netrwPlugin = 1
+  " Re-enable netrw's `gx` command
+  nnoremap gx :call netrw#BrowseX(expand((exists("g:netrw_gx") ?
+              \                             g:netrw_gx : '<cfile>')),
+              \     netrw#CheckIfRemote())<CR>
 
-" Re-enable netrw's `gx` command
-nnoremap gx :call netrw#BrowseX(expand((exists("g:netrw_gx") ?
-            \                             g:netrw_gx : '<cfile>')),
-            \     netrw#CheckIfRemote())<CR>
-
-augroup dirvish
-  autocmd!
-  autocmd FileType dirvish silent g/.DS_Store/d    " Hide .DS_Store
-augroup END
+  augroup dirvish
+    autocmd!
+    autocmd FileType dirvish silent g/.DS_Store/d    " Hide .DS_Store
+  augroup END
+endif
 
 " VIM-EASY-ALIGN ---------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/easy_align.vim'))
+  " Start interactive EasyAlign in visual mode (e.g. vipga)
+  xmap ga <Plug>(EasyAlign)
 
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+  " Start interactive EasyAlign for a motion/text object (e.g. gaip)
+  nmap ga <Plug>(EasyAlign)
+endif
 
 " VIM-FUGITIVE -----------------------------------------------------------------
-
-nnoremap <Leader>gm :Gmove<CR>
-nnoremap <Leader>gr :Gread<CR>
-nnoremap <Leader>gs :Gstatus<CR>
-nnoremap <Leader>gw :Gwrite<CR>
-nnoremap <Leader>gc :Gcommit -m ""<Left>
-nnoremap <Leader>gp :Gpush<CR>
+if !empty(globpath(&rtp, '/plugin/fugitive.vim'))
+  nnoremap <Leader>gm :Gmove<CR>
+  nnoremap <Leader>gr :Gread<CR>
+  nnoremap <Leader>gs :Gstatus<CR>
+  nnoremap <Leader>gw :Gwrite<CR>
+  nnoremap <Leader>gc :Gcommit -m ""<Left>
+  nnoremap <Leader>gp :Gpush<CR>
+endif
 
 " VIM-GETTING-THINGS-DOWN ------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/getting_things_down.vim'))
+  " Quick-switch between current file and `TODO.md` of project root
+  nnoremap <Leader><Leader> :call getting_things_down#show_todo()<CR>
 
-" Quick-switch between current file and `TODO.md` of project root
-nnoremap <Leader><Leader> :call getting_things_down#show_todo()<CR>
+  " Cycle through TODO keywords
+  nnoremap <silent> <Leader>c :call getting_things_down#cycle_status()<CR>
 
-" Cycle through TODO keywords
-nnoremap <silent> <Leader>c :call getting_things_down#cycle_status()<CR>
+  " Toggle TODO tasks
+  nnoremap <silent> <Leader>C :call getting_things_down#toggle_task()<CR>
+  vnoremap <silent> <Leader>C :call getting_things_down#toggle_task()<CR>
+endif
 
 " VIM-TEXTOBJ-QUOTE ------------------------------------------------------------
-
-augroup textobj_quote
-  autocmd!
-  autocmd FileType markdown call textobj#quote#init()
-  autocmd FileType text     call textobj#quote#init()
-augroup END
+if !empty(globpath(&rtp, '/plugin/textobj/quote.vim'))
+  augroup textobj_quote
+    autocmd!
+    autocmd FileType markdown call textobj#quote#init()
+    autocmd FileType text     call textobj#quote#init()
+  augroup END
+endif
 
 " UI ===========================================================================
 " This section concerns vim's user interface.
@@ -369,29 +395,33 @@ if &viminfo !~# ',n'              " Store viminfo within .vim/
   let &viminfo .= ',n' . g:vim_home . '/viminfo'
 endif
 
-" Remove files from path which have not been modified for 31 days
-" (https://gist.github.com/mllg/5353184)
-function! Tmpwatch(path, days)
-  let l:path = expand(a:path)
-  if isdirectory(l:path)
-    for file in split(glob(l:path . '/*'), "\n")
-      if localtime() > getftime(file) + 86400 * a:days && delete(file) != 0
-        echoerr "Tmpwatch(): Error deleting '" . file . "'"
-      endif
-    endfor
-  else
-    echoerr "Tmpwatch(): Directory '" . l:path . "' not found"
-  endif
-endfunction
-
 if has('persistent_undo')         " Store vimundo within .vim/
   set undofile
   set undolevels=5000
-  if !isdirectory(g:vim_home . '/vimundo')
-    call mkdir(g:vim_home . '/vimundo')
-  endif
   let &undodir = g:vim_home . '/vimundo'
-  call Tmpwatch(&undodir, 30)
+  if !isdirectory(&undodir)
+    call mkdir(&undodir)
+  else
+    " Remove from {dir} all files not modified in the last {n} days (default 30)
+    " (https://gist.github.com/mllg/5353184)
+    function! s:prune_old_files(dir, ...)
+      let l:days = a:0 ? a:1 : 30
+      let l:path = expand(a:dir)
+
+      if !isdirectory(l:path)
+        echohl WarningMsg | echo "Invalid directory" | echohl None
+        return 0
+      endif
+
+      for file in split(glob(l:path . '/*'), "\n")
+        if localtime() > getftime(file) + 86400 * l:days && delete(file) != 0
+          echoerr 's:prune_old_files(): ' . file . ' could not be deleted'
+        endif
+      endfor
+    endfunction
+  
+    call s:prune_old_files(&undodir)
+  endif
 endif
 
 " ENCRYPTION -------------------------------------------------------------------
@@ -416,21 +446,28 @@ endif
 function! MoveFile(dest, bang)
   let l:source = expand('%:p')
   let l:target = fnamemodify(a:dest, ':p')
-  let l:target_path = fnamemodify(l:target, ':h')
+  let l:target_dir = fnamemodify(l:target, ':h')
 
-  " Potential errors (destination directory does not exist, overwrite existing file?)
-  if !isdirectory(l:target_path)
+  if l:source == l:target
+    return 0
+  " Destination directory does not exist
+  elseif !isdirectory(l:target_dir)
     if (a:bang ==# '!')
-      exec '!mkdir -p ' . l:target_path
+      call mkdir(l:target_dir, 'p')
     else
-      echoerr l:target_path . ': No such directory'
+      echohl WarningMsg
+        echo l:target_dir . ': no such directory (add ! to create)'
+      echohl None
       return 0
     endif
+  " Overwrite existing file?
   elseif bufexists(l:target)
     if (a:bang ==# '!')
       exec 'bwipe!' . bufnr(l:target)
     else
-      echoerr 'File is loaded in another buffer (add ! to override)'
+      echohl WarningMsg
+        echo 'File is loaded in another buffer (add ! to override)'
+      echohl None
       return 0
     endif
   endif
@@ -438,19 +475,71 @@ function! MoveFile(dest, bang)
   execute 'saveas' . a:bang . ' ' . fnameescape(l:target) .
               \ (isdirectory(l:target) ? expand('%:t') : '')
 
+  if !isdirectory(l:target) && fnamemodify(l:source, ':e') != fnamemodify(l:target, ':e')
+    edit
+  endif
+
   call delete(l:source)
   execute bufnr(l:source) . 'bwipe!'
 
   return 1
 endfunction
 
+function! RmFile(target, bang)
+  let l:target = expand(a:target)
+
+  " Target file does not exist or is not writable
+  if empty(glob(l:target))
+    echohl WarningMsg | echo l:target . ': no such file' | echohl None
+    return 0
+  elseif isdirectory(a:target)
+    if (a:bang ==# '!')
+      " close all related buffers
+      let target_bufs = filter(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
+                  \            "expand('#' . v:val . ':p') =~# fnamemodify(l:target, ':p')")
+      for buffer in target_bufs
+        execute 'bd!' . buffer
+      endfor
+
+      call delete(a:target, 'rf')
+    else
+    echohl WarningMsg
+      echo l:target . ' is a directory (add ! to override)'
+    echohl None
+      return 0
+    end
+  elseif !filewritable(l:target)
+    echohl WarningMsg | echo l:target . ': read-only file' | echohl WarningMsg
+    return 0
+  else
+    " close buffer
+    let l:target_buf = 1 + index(map(range(1, bufnr('$')),
+                \                    "expand('#' . v:val . ':p')"),
+                \                fnamemodify(l:target, ':p'))
+    if buflisted(l:target_buf)
+      if bufnr('%') == l:target_buf
+        buffer #
+      endif
+      execute 'bd!' . l:target_buf
+    endif
+
+    call delete(a:target)
+  endif
+
+  return 1
+endfunction
+
 command! -nargs=1 -complete=file -bar -bang Mv call MoveFile('<args>', '<bang>')
+command! -nargs=1 -complete=file -bar -bang Rm call RmFile('<args>', '<bang>')
 
 " FILE METADATA ----------------------------------------------------------------
 
-filetype plugin indent on                                         " Enable filetype detection
-if exists('+encoding')    | set encoding=utf-8           | endif  " Set Unicode
-if exists('+fileformats') | set fileformats=unix,dos,mac | endif  " Order of preferred file formats
+if exists(':filetype')    | filetype plugin indent on    | endif
+if exists('+fileformats') | set fileformats=unix,dos,mac | endif
+if exists('+encoding')
+  set encoding=utf-8
+  scriptencoding utf-8
+endif
 
 " COMMAND LINE OPTIONS ---------------------------------------------------------
 
