@@ -3,25 +3,51 @@
 
 As with anyone’s config files, most of the stuff in here is pretty personal. Here are a couple of good ideas I had that might be worth trying yourself:
 
-Modularity
-----------
+Organizing `vimrc` with Folds
+-----------------------------
 
-My `vimrc` itself is pretty empty. All the customization is broken up into separate files in a `config/` directory, because categorization is one of my favorite things to do in the whole wide world.
+Folds are amazing. Here they are in action on my `vimrc`:
 
-```viml
-" .vim/vimrc
+```
+" ~/.vim/vimrc
 
-for file in split(glob(g:vim_home . '/config/**.vim'), '\n')
-  exec 'source ' . file
-endfor
+" Initializing variables for portability
+let g:vim_home = expand('<sfile>:p:h')
+let $MYVIMRC   = g:vim_home . '/vimrc'
+let $MYGVIMRC  = g:vim_home . '/gvimrc'
+
+" MAPPINGS =====================================================================
+
+" BASE ------------------------------------------------------------------- [4] -
+" TEXT MANIPULATION ----------------------------------------------------- [35] -
+" BUFFER MANAGEMENT ------------------------------------------------------ [7] -
+" UI & WINDOW MANAGEMENT ------------------------------------------------ [12] -
+" FILE MANAGEMENT -------------------------------------------------------- [7] -
+" NAVIGATION ------------------------------------------------------------ [13] -
+" MISCELLANEOUS --------------------------------------------------------- [21] -
+                                                                                
+" PER-MACHINE ==================================================================
+
+" SEEDBOX ---------------------------------------------------------------- [3] -
+" DEFAULT WORKING DIRECTORY --------------------------------------------- [14] -
+
+" PLUGINS ======================================================================
+
+" VIM-PLUG -------------------------------------------------------------- [41] -
+" BROWSERLINK ----------------------------------------------------------- [23] -
+...
 ```
 
-(Okay, so this wasn’t exactly my idea. I stumbled upon a blog post with a variant of this method years ago and can’t find it now, which makes me a little sad, because credit-where-credit-is-due and all, but let’s not beat ourselves up over it.)
+(The number on the right indicates how many non-blank lines there are in the fold.)
+
+I used to have all these sections broken out as separate files, stored in a `config/` directory and source in a `for` loop in `vimrc`. That was pretty good, and romainl even pointed out that I could just put them in a `plugin/` directory and ditch the `for` loop altogether, but I like this even better. 
+
+`ftplugin/vim.vim` is where the magic happens. Headings are any commented lines exactly 80 characters long ending in a space followed by string of `=`/`-` characters. Functions get folded, too.
 
 Portability
 -----------
 
-There may be times when you want to fire up your vim config on someone else’s computer. Maybe you had to borrow your friend’s laptop because you forgot your charger. Maybe you’re asked to do a live coding challenge in an interview, and the chump on the other side of the table just dropped you into SublimeText. Maybe you’re offering impromptu tech support to your crush, and this is your big chance to show her what a fucking wizard you are.
+There may be times when you want to fire up your vim config on someone else’s computer. Maybe you have to borrow your friend’s laptop because you forgot your charger. Maybe you’re asked to do a live coding challenge in an interview, and the chump on the other side of the table just dropped you into SublimeText. Maybe you’re offering impromptu tech support to your crush, and this is your big chance to show her what a fucking wizard you are.
 
 In any case, it can be done — but it usually involves getting all jumbled up in someone else’s dotfiles. The other way (_i.e.,_ the polite way) involves passing some command line flags to vim to specify an alternate `vimrc` and runtime path:
 
