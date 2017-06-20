@@ -29,12 +29,6 @@ function! s:heading_level(lnum)
   endif
 endfunction
 
-function! Foo(lnum)
-  return empty(getline(a:lnum)) &&
-              \ 0 < s:heading_level(nextnonblank(a:lnum)) &&
-              \ s:heading_level(nextnonblank(a:lnum)) <= s:parent_hlevel(a:lnum)
-endfunction
-
 function! s:end_of_hsubtree(lnum)
   return empty(getline(a:lnum)) &&
               \ 0 < s:heading_level(nextnonblank(a:lnum)) &&
@@ -50,7 +44,7 @@ function! s:parent_hlevel(lnum)
 endfunction
 
 function! VimrcFoldText()
-  let fold_stats = '[' . len(filter(range(v:foldstart, v:foldend), "getline(v:val) =~# '\\w'")) . ']'
+  let fold_stats = '[' . len(filter(range(v:foldstart + 1, v:foldend), "getline(v:val) !~# '^\\(\\W*$\\|\" \\)'")) . ']'
   let first_line = len(getline(v:foldstart)) < 80 ?
               \ getline(v:foldstart) . repeat(' ', 80 - len(getline(v:foldstart))) :
               \ getline(v:foldstart)
