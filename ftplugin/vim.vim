@@ -44,10 +44,35 @@ function! s:parent_hlevel(lnum)
 endfunction
 
 function! VimrcFoldText()
-  let fold_stats = '[' . len(filter(range(v:foldstart + 1, v:foldend), "getline(v:val) !~# '^\\(\\W*$\\|\" \\)'")) . ']'
-  let first_line = len(getline(v:foldstart)) < 80 ?
-              \ getline(v:foldstart) . repeat(' ', 80 - len(getline(v:foldstart))) :
-              \ getline(v:foldstart)
-  let truncate_right = len(fold_stats) + 4
-  return first_line[:(truncate_right * -1)] . ' ' . fold_stats . ' -'
+  let s:line = getline(v:foldstart)
+  let s:preview_maxwidth = 80 - 1 - (strdisplaywidth(s:stats())) - 2
+
+  let s:preview = s:line[0:(s:preview_maxwidth - 1)]
+
+  let s:padding = repeat('-', s:preview_maxwidth - strdisplaywidth(s:preview) + 1)
+  let s:padding = substitute(s:padding, '\(^.\|.$\)', ' ', 'g')
+
+  return s:preview . s:padding . s:stats() . ' -'
+endfunction
+
+function! Stats(foldstart, foldend)
+  let l:fold_range = range(a:foldstart + 1,
+        \ s:is_funcdef(a:foldstart) ? prevnonblank(a:foldend) - 1 : a:foldend)
+
+  " don't count blank lines or comments
+  call filter(l:fold_range, "getline(v:val) !~# '^\\(\\W*$\\|\\s*\" \\)'")
+  return '[' . len(l:fold_range) . ']'
+endfunction
+
+function! s:stats()
+  let l:fold_range = range(v:foldstart + 1,
+        \ s:is_funcdef(v:foldstart) ? prevnonblank(v:foldend) - 1 : v:foldend)
+
+  " don't count blank lines or comments
+  call filter(l:fold_range, "getline(v:val) !~# '^\\(\\W*$\\|\\s*\" \\)'")
+  return '[' . len(l:fold_range) . ']'
+endfunction
+
+function! s:is_funcdef(lnum)
+  return getline(a:lnum) =~ '^\s*function!\= \(\u\|s:\|\w\+#\).\+\(.*\)'
 endfunction

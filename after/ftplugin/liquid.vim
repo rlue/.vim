@@ -8,4 +8,3 @@ elseif liquid_ext =~? 'js'
 elseif liquid_ext =~? 'md'
   set commentstring=>\ %s
 endif
-

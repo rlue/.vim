@@ -5,13 +5,13 @@ let $MYGVIMRC  = g:vim_home . '/gvimrc'
 
 " MAPPINGS =====================================================================
 
-" BASE -------------------------------------------------------------------------
+" Base -------------------------------------------------------------------------
 
 let mapleader = "\<Space>"
 let maplocalleader = "\\"
 if exists('+wildcharm') | set wildcharm=<C-z> | endif
 
-" TEXT MANIPULATION ------------------------------------------------------------
+" Text Manipulation ------------------------------------------------------------
 
 " Y should be like C & D, not 'yy'
 nnoremap Y y$
@@ -52,7 +52,7 @@ for char in [ '_', '-', '.', ':', ',', ';', '<bar>',
   execute 'onoremap a' . char . ' :normal va' . char . '<CR>'
 endfor
 
-" BUFFER MANAGEMENT ------------------------------------------------------------
+" Buffer Management ------------------------------------------------------------
 " Save
 nnoremap <Leader>w :update<CR>
 nnoremap <Leader>W :wa<CR>
@@ -61,7 +61,7 @@ nnoremap <Leader>W :wa<CR>
 nnoremap <Leader>b :ls<CR>:b
 nnoremap <Leader>B :browse oldfiles<CR>
 
-" UI & WINDOW MANAGEMENT -------------------------------------------------------
+" UI & Window Management -------------------------------------------------------
 " Easy window switching
 if exists('+winminheight') | set winminheight=0 | endif
 if exists('+winminwidth')  | set winminwidth=0  | endif
@@ -74,7 +74,7 @@ nnoremap <C-w><C-j> <C-w>j<C-w>_<C-w><Bar>
 nnoremap <C-w><C-k> <C-w>k<C-w>_<C-w><Bar>
 nnoremap <C-w><C-l> <C-w>l<C-w>_<C-w><Bar>
 
-" FILE MANAGEMENT --------------------------------------------------------------
+" File Management --------------------------------------------------------------
 if isdirectory($HOME . '/Documents/Notes')
   nnoremap <Leader>en :e ~/Documents/Notes/**/
 endif
@@ -82,7 +82,7 @@ endif
 "   nnoremap <Leader>eb :e ~/Projects/rlue.github.io/_drafts/**/
 " endif
 
-" NAVIGATION -------------------------------------------------------------------
+" Navigation -------------------------------------------------------------------
 
 " Smart j/k (move by display lines unless a count is provided)
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
@@ -98,7 +98,7 @@ noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 "   endfor
 " endfunction
 
-" MISCELLANEOUS ----------------------------------------------------------------
+" Miscellaneous ----------------------------------------------------------------
 
 " $MYVIMRC source/edit
 nnoremap <Leader>ev :e'e ' . g:vim_home . '/**/'<CR>
@@ -126,11 +126,11 @@ nnoremap Q <Nop>
 
 " PER-MACHINE ==================================================================
 
-" SEEDBOX ----------------------------------------------------------------------
+" Seedbox ----------------------------------------------------------------------
 " Reset colorscheme
 if hostname() =~# 'porphyrion' | colorscheme default | endif
 
-" DEFAULT WORKING DIRECTORY ----------------------------------------------------
+" Default Working Directory ----------------------------------------------------
 " if has('win32')
 "   if $COMPUTERNAME == "ODALISQUE"
 "     :cd $HOMEPATH/Dropbox
@@ -147,7 +147,7 @@ if hostname() =~# 'porphyrion' | colorscheme default | endif
 
 " PLUGINS ======================================================================
 
-" VIM-PLUG ---------------------------------------------------------------------
+" vim-plug ---------------------------------------------------------------------
 " Automatically install and run if not found
 if empty(glob(g:vim_home . '/autoload/plug.vim'))
   exec 'silent !curl -fLo ' . g:vim_home . '/autoload/plug.vim --create-dirs
@@ -159,47 +159,54 @@ if empty(glob(g:vim_home . '/autoload/plug.vim'))
 endif
 
 call plug#begin()
+Plug '~/Projects/vim-barbaric'
+Plug '~/Projects/vim-fold-rspec'
 
-Plug        'jaxbot/browserlink.vim'
-Plug      'junegunn/goyo.vim'
-Plug       'morhetz/gruvbox'
-Plug      'junegunn/limelight.vim'
-Plug     'NLKNguyen/papercolor-theme'
-Plug 'vim-syntastic/syntastic'
-Plug        'gioele/vim-autoswap'
-Plug   'altercation/vim-colors-solarized'
-Plug         'tpope/vim-commentary'
-Plug            'ap/vim-css-color'
-Plug   'vim-airline/vim-airline'
-Plug   'vim-airline/vim-airline-themes'
-Plug      'justinmk/vim-dirvish'
-Plug      'junegunn/vim-easy-align'
-Plug         'tpope/vim-fugitive'
-Plug          'rlue/vim-getting-things-down'
-Plug        'henrik/vim-indexed-search'
-Plug      'pangloss/vim-javascript'
-Plug         'tpope/vim-liquid'
-Plug         'tpope/vim-rails'
-Plug         'tpope/vim-repeat'
-Plug         'tpope/vim-rsi'
-Plug         'tpope/vim-sensible'
-Plug         'tpope/vim-sleuth'
-Plug 'slim-template/vim-slim'
-Plug         'tpope/vim-speeddating'
-Plug         'tpope/vim-surround'
-Plug          'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
-Plug         'tpope/vim-unimpaired'
+Plug         'jaxbot/browserlink.vim'
+Plug       'junegunn/goyo.vim'
+Plug        'morhetz/gruvbox'
+Plug       'junegunn/limelight.vim'
+Plug      'NLKNguyen/papercolor-theme'
+Plug  'vim-syntastic/syntastic'
+Plug        'wincent/terminus'
+" Plug         'gioele/vim-autoswap', { 'branch': 'any-terminal-macos' }
+Plug    'altercation/vim-colors-solarized'
+Plug          'tpope/vim-commentary'
+Plug             'ap/vim-css-color'
+Plug    'vim-airline/vim-airline'
+Plug    'vim-airline/vim-airline-themes'
+Plug    'nathangrigg/vim-beancount'
+Plug       'justinmk/vim-dirvish'
+Plug          'tpope/vim-dispatch'
+Plug       'junegunn/vim-easy-align'
+" Plug           'rlue/vim-fold-rspec'
+Plug          'tpope/vim-fugitive'
+Plug       'jamessan/vim-gnupg'
+Plug 'ludovicchabant/vim-gutentags'
+Plug           'rlue/vim-getting-things-down'
+Plug         'henrik/vim-indexed-search'
+Plug       'pangloss/vim-javascript'
+Plug          'tpope/vim-liquid'
+Plug          'tpope/vim-rails'
+Plug          'tpope/vim-repeat'
+Plug          'tpope/vim-rsi'
+Plug     'thoughtbot/vim-rspec'
+Plug          'tpope/vim-sensible'
+Plug          'tpope/vim-sleuth'
+Plug  'slim-template/vim-slim'
+Plug          'tpope/vim-speeddating'
+Plug          'tpope/vim-surround'
+Plug           'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
+Plug          'tpope/vim-unimpaired'
 
-if executable('fzf') && v:version >= 740
-  Plug isdirectory('/usr/local/opt/fzf') ?
-              \ '/usr/local/opt/fzf' :
-              \ 'junegunn/fzf', { 'dir': '~/.fzf' }
+if executable('fzf') && v:version >= 740 && !has('gui_running')
+  Plug isdirectory('/usr/local/opt/fzf') ? '/usr/local/opt/fzf' : '~/.fzf'
   Plug 'junegunn/fzf.vim'
 endif
 
 call plug#end()
 
-" BROWSERLINK ------------------------------------------------------------------
+" browserlink.vim --------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/browserlink.vim'))
   let g:bl_no_mappings   = 1        " Disable default mappings
 
@@ -229,13 +236,13 @@ if !empty(globpath(&rtp, '/plugin/browserlink.vim'))
   endfunction
 endif
 
-" FZF --------------------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/fzf.vim')) && executable('fzf')
+" fzf.vim ----------------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/fzf.vim')) && executable('fzf') && !has('gui_running')
   nnoremap <Leader>ef :Files<CR>
   nnoremap <Leader>eb :Buffers<CR>
 endif
 
-" LIMELIGHT --------------------------------------------------------------------
+" limelight --------------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/limelight.vim'))
   let g:limelight_default_coefficient = 0.7   " Set deeper default shading
 
@@ -246,7 +253,7 @@ if !empty(globpath(&rtp, '/plugin/limelight.vim'))
   augroup END
 endif
 
-" SYNTASTIC --------------------------------------------------------------------
+" syntastic --------------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/syntastic.vim'))
   let g:syntastic_ruby_checkers = ['rubocop']
   let g:syntastic_slim_checkers = ['slim_lint']
@@ -270,7 +277,7 @@ if !empty(globpath(&rtp, '/plugin/syntastic.vim'))
   nnoremap <Leader>st :SyntasticToggleMode<CR>
 endif
 
-" VIM-AIRLINE ------------------------------------------------------------------
+" vim-airline ------------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/airline.vim'))
   let g:airline_powerline_fonts                   = 1
   let g:airline#extensions#whitespace#enabled     = 0
@@ -279,7 +286,17 @@ if !empty(globpath(&rtp, '/plugin/airline.vim'))
   let g:airline_theme                             = 'solarized'
 endif
 
-" VIM-DIRVISH ------------------------------------------------------------------
+" vim-autoswap -----------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/autoswap.vim'))
+  let g:autoswap_detect_tmux = 1
+endif
+
+" vim-barbarian ----------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/barbarian.vim'))
+  let g:barbarian_default = 0
+endif
+
+" vim-dirvish ------------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/dirvish.vim'))
   " Disable netrw
   let g:loaded_netrwPlugin = 1
@@ -295,7 +312,17 @@ if !empty(globpath(&rtp, '/plugin/dirvish.vim'))
   augroup END
 endif
 
-" VIM-EASY-ALIGN ---------------------------------------------------------------
+" vim-dispatch -----------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/dispatch.vim'))
+  nnoremap <F9> :Dispatch<CR>
+
+  augroup dispatches
+    autocmd!
+    autocmd FileType ruby if expand('%:t:r') =~ '_spec$' | let b:dispatch = 'rspec %' | endif
+  augroup END
+endif
+
+" vim-easy-align ---------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/easy_align.vim'))
   " Start interactive EasyAlign in visual mode (e.g. vipga)
   xmap ga <Plug>(EasyAlign)
@@ -304,17 +331,24 @@ if !empty(globpath(&rtp, '/plugin/easy_align.vim'))
   nmap ga <Plug>(EasyAlign)
 endif
 
-" VIM-FUGITIVE -----------------------------------------------------------------
+" vim-fugitive -----------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/fugitive.vim'))
   nnoremap <Leader>gm :Gmove<CR>
   nnoremap <Leader>gr :Gread<CR>
+  nnoremap <Leader>gd :Gdiff<CR>
   nnoremap <Leader>gs :Gstatus<CR>
   nnoremap <Leader>gw :Gwrite<CR>
   nnoremap <Leader>gc :Gcommit -m ""<Left>
   nnoremap <Leader>gp :Gpush<CR>
+  nnoremap <Leader>gl :Glog<CR>
+  nnoremap <Leader>gb :Gblame<CR>
 endif
 
-" VIM-GETTING-THINGS-DOWN ------------------------------------------------------
+" Clear out temporary buffers automatically
+" http://vimcasts.org/episodes/fugitive-vim-browsing-the-git-object-database/
+autocmd BufReadPost fugitive://* set bufhidden=delete
+
+" vim-getting-things-down ------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/getting_things_down.vim'))
   " Quick-switch between current file and `TODO.md` of project root
   nnoremap <Leader><Leader> :call getting_things_down#show_todo()<CR>
@@ -327,7 +361,9 @@ if !empty(globpath(&rtp, '/plugin/getting_things_down.vim'))
   vnoremap <silent> <Leader>C :call getting_things_down#toggle_task()<CR>
 endif
 
-" VIM-TEXTOBJ-QUOTE ------------------------------------------------------------
+" vim-rspec --------------------------------------------------------------------
+
+" vim-textobj-quote ------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/textobj/quote.vim'))
   augroup textobj_quote
     autocmd!
@@ -339,7 +375,7 @@ endif
 " UI ===========================================================================
 " This section concerns vim's user interface.
 
-" COLORS & HIGHLIGHTING --------------------------------------------------------
+" Colors & Highlighting --------------------------------------------------------
 " Everyone's favorite colorscheme
 if !empty(globpath(&rtp, '/colors/solarized.vim')) | colorscheme solarized | endif
 if exists('+background')     | set background=dark | endif
@@ -358,38 +394,56 @@ augroup colorcolumn
               \ let &l:colorcolumn=join(range(81,999),',') | endif
 augroup END
 
-" HINTS ------------------------------------------------------------------------
+" Folding ----------------------------------------------------------------------
+set foldlevel=2
+
+" Hints ------------------------------------------------------------------------
 " Show relative line numbers in left sidebar
 if exists('+number')         | set number          | endif
 if exists('+relativenumber') | set relativenumber  | endif
 
-" WINDOWS ----------------------------------------------------------------------
+" Windows ----------------------------------------------------------------------
 " Open new windows below or to the right of the current buffer
 if exists('+splitbelow')  | set splitbelow  | endif
 if exists('+splitright')  | set splitright  | endif
 
-" LINE WRAPPING ----------------------------------------------------------------
+" Line Wrapping ----------------------------------------------------------------
 " Wrap at word boundaries (instead of breaking words at textwidth)
 if exists('+linebreak')   | set linebreak   | endif
 
 " On long, wrapped lines, indent whole paragraph (instead of just first line)
 if exists('+breakindent') | set breakindent | endif
 
-" iTERM 2 ----------------------------------------------------------------------
+" iTerm ------------------------------------------------------------------------
 if $TERM_PROGRAM =~# 'iTerm'
-  " Dynamic cursor type (INSERT: `|` / NORMAL: `█`)
-  if exists('+t_SI') | let &t_SI = "\<Esc>]50;CursorShape=1\x7" | endif
-  if exists('+t_SI') | let &t_EI = "\<Esc>]50;CursorShape=0\x7" | endif
+  " Dynamic cursor type (INSERT: `|`, NORMAL: `█`, REPLACE: `_`)
+  " per https://vi.stackexchange.com/questions/3379/cursor-shape-under-vim-tmux
+  " and http://vim.wikia.com/wiki/Change_cursor_shape_in_different_modes
+  " if has('cursorshape')
+  "   function! s:cursor_code(val)
+  "     let l:base        = ']50;CursorShape=' . a:val . ''
+  "     let l:prefix = exists('$TMUX') ? 'Ptmux;' : ''
+  "     let l:suffix = exists('$TMUX') ? '\' : ''
+  "     return l:prefix . l:base . l:suffix
+  "   endfunction
 
-  if exists('+t_Co') | set t_Co=256 | endif " Enable 256 color mode
-  highlight Comment cterm=italic            " Italicize comments
+  "   let &t_SI = s:cursor_code(1)
+  "   let &t_SR = s:cursor_code(2)
+  "   let &t_EI = s:cursor_code(0)
+  " endif
+
+  " Enable 256 color mode
+  if exists('+t_Co') | set t_Co=256 | endif
+
+  " Italicize comments
+  highlight Comment cterm=italic
 endif
 
 " WORKFLOW =====================================================================
 " This section concerns vim's basic editing environment: 
 " how it loads buffers, loads new files, handles file metadata, etc.
 
-" ENVIRONMENT PERSISTENCE ------------------------------------------------------
+" Environment Persistence ------------------------------------------------------
 
 if &viminfo !~# ',n'              " Store viminfo within .vim/
   let &viminfo .= ',n' . g:vim_home . '/viminfo'
@@ -424,11 +478,11 @@ if has('persistent_undo')         " Store vimundo within .vim/
   endif
 endif
 
-" ENCRYPTION -------------------------------------------------------------------
+" Encryption -------------------------------------------------------------------
 
 if has('crypt-blowfish2') | set cm=blowfish2 | endif
 
-" FILE PERSISTENCE -------------------------------------------------------------
+" File Persistence -------------------------------------------------------------
 
 if exists('+nobackup')   | set nobackup       | endif " Disable auto-backup when overwriting files
 if exists('+hidden')     | set hidden         | endif " Keep buffers alive when abandoned
@@ -441,7 +495,7 @@ if exists('+directory')
   let &directory = g:vim_home . '/swap'
 endif
 
-" FILE MANIPULATION ------------------------------------------------------------
+" File Manipulation ------------------------------------------------------------
 
 function! MoveFile(dest, bang)
   let l:source = expand('%:p')
@@ -532,7 +586,7 @@ endfunction
 command! -nargs=1 -complete=file -bar -bang Mv call MoveFile('<args>', '<bang>')
 command! -nargs=1 -complete=file -bar -bang Rm call RmFile('<args>', '<bang>')
 
-" FILE METADATA ----------------------------------------------------------------
+" File Metadata ----------------------------------------------------------------
 
 if exists(':filetype')    | filetype plugin indent on    | endif
 if exists('+fileformats') | set fileformats=unix,dos,mac | endif
@@ -541,7 +595,7 @@ if exists('+encoding')
   scriptencoding utf-8
 endif
 
-" COMMAND LINE OPTIONS ---------------------------------------------------------
+" Command Line Options ---------------------------------------------------------
 
 cabbr <expr> %% fnameescape(expand('%:p:h'))        " shortcut: directory of current buffer
 if exists('+ignorecase') | set ignorecase | endif   " Search with...
@@ -549,7 +603,7 @@ if exists('+smartcase')  | set smartcase  | endif   " ...smart case recognition
 if exists('+wildignore') | set wildignore+=*/tmp/*,*.zip,*.swp,*.so | endif
 
 
-" EXTERNAL TOOLS ---------------------------------------------------------------
+" External Tools ---------------------------------------------------------------
 
 " grep (ag)
 call system('type ag')
