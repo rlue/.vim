@@ -604,8 +604,8 @@ if exists('+filetype')
   filetype plugin indent on
 
   augroup vimrc_filetype
-    autocmd! | autocmd VimEnter {} setlocal filetype=markdown
-    autocmd BufNewFile * let b:foo = 'yes'
+    autocmd!
+    autocmd VimEnter {} setlocal filetype=markdown
   augroup END
 endif
 
