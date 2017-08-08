@@ -3,16 +3,15 @@ let g:vim_home = expand('<sfile>:p:h')
 let $MYVIMRC   = g:vim_home . '/vimrc'
 let $MYGVIMRC  = g:vim_home . '/gvimrc'
 
+" STAGING ======================================================================
+
 " MAPPINGS =====================================================================
-
 " Base -------------------------------------------------------------------------
-
 let mapleader = "\<Space>"
 let maplocalleader = "\\"
 if exists('+wildcharm') | set wildcharm=<C-z> | endif
 
 " Text Manipulation ------------------------------------------------------------
-
 " Y should be like C & D, not 'yy'
 nnoremap Y y$
 
@@ -37,10 +36,10 @@ if has('clipboard')
 endif
 
 " Easy whitespace
-nnoremap <Leader>k m`O<Esc>``
-nnoremap <Leader>j m`o<Esc>``
-nnoremap <Leader>h i <Esc>l
-nnoremap <Leader>l a <Esc>h
+nnoremap <Leader>k    m`O<Esc>``
+nnoremap <Leader>j    m`o<Esc>``
+nnoremap <Leader>h    i <Esc>l
+nnoremap <Leader>l    a <Esc>h
 nnoremap <Leader><CR> i<CR><Esc>`.
 
 " More text objects! 
@@ -152,9 +151,8 @@ if hostname() =~# 'porphyrion' | colorscheme default | endif
 if empty(glob(g:vim_home . '/autoload/plug.vim'))
   exec 'silent !curl -fLo ' . g:vim_home . '/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  augroup vimPlug
-    autocmd!
-    autocmd VimEnter * PlugInstall | source $MYVIMRC
+  augroup vimrc_vim_plug
+    autocmd! | autocmd VimEnter * execute 'PlugInstall | source $MYVIMRC'
   augroup END
 endif
 
@@ -184,6 +182,7 @@ Plug          'tpope/vim-fugitive'
 Plug       'jamessan/vim-gnupg'
 Plug 'ludovicchabant/vim-gutentags'
 Plug           'rlue/vim-getting-things-down'
+Plug           'w0ng/vim-hybrid'
 Plug         'henrik/vim-indexed-search'
 Plug       'pangloss/vim-javascript'
 Plug          'tpope/vim-liquid'
@@ -218,10 +217,10 @@ if !empty(globpath(&rtp, '/plugin/browserlink.vim'))
         \   'css'  , 'scss'   , 'sass' ,
         \   'slim' , 'liquid' , 'md'     ]
 
-  augroup browserlink
+  augroup vimrc_browserlink
     autocmd!
-    exec 'autocmd BufWritePost *.' . join(s:bl_pagefileexts,',*.') .
-                \ ' call s:trigger_reload("' . expand('%:p:h') . '")'
+    exec 'autocmd BufWritePost *.' . join(s:bl_pagefileexts, ',*.') .
+          \ ' call s:trigger_reload("' . expand('%:p:h') . '")'
   augroup END
 
   function! s:trigger_reload(dir)
@@ -246,11 +245,13 @@ endif
 if !empty(globpath(&rtp, '/plugin/limelight.vim'))
   let g:limelight_default_coefficient = 0.7   " Set deeper default shading
 
-  augroup goyo_ll
-    autocmd!
-    autocmd User GoyoEnter Limelight           " Tie Limelight to Goyo
-    autocmd User GoyoLeave Limelight!
-  augroup END
+  if exists(':Goyo')
+    augroup vimrc_limelight
+      autocmd!
+      autocmd User GoyoEnter Limelight           " Tie Limelight to Goyo
+      autocmd User GoyoLeave Limelight!
+    augroup END
+  endif
 endif
 
 " syntastic --------------------------------------------------------------------
@@ -283,7 +284,6 @@ if !empty(globpath(&rtp, '/plugin/airline.vim'))
   let g:airline#extensions#whitespace#enabled     = 0
   let g:airline#extensions#tabline#enabled        = 1
   let g:airline#extensions#tabline#buffer_nr_show = 1
-  let g:airline_theme                             = 'solarized'
 endif
 
 " vim-autoswap -----------------------------------------------------------------
@@ -302,11 +302,11 @@ if !empty(globpath(&rtp, '/plugin/dirvish.vim'))
   let g:loaded_netrwPlugin = 1
 
   " Re-enable netrw's `gx` command
-  nnoremap gx :call netrw#BrowseX(expand((exists("g:netrw_gx") ?
-              \                             g:netrw_gx : '<cfile>')),
-              \     netrw#CheckIfRemote())<CR>
+  nnoremap gx :call
+        \ netrw#BrowseX(expand(exists("g:netrw_gx") ? g:netrw_gx : '<cfile>'),
+        \               netrw#CheckIfRemote())<CR>
 
-  augroup dirvish
+  augroup vimrc_dirvish
     autocmd!
     autocmd FileType dirvish silent g/.DS_Store/d    " Hide .DS_Store
   augroup END
@@ -316,7 +316,7 @@ endif
 if !empty(globpath(&rtp, '/plugin/dispatch.vim'))
   nnoremap <F9> :Dispatch<CR>
 
-  augroup dispatches
+  augroup vimrc_dispatch
     autocmd!
     autocmd FileType ruby if expand('%:t:r') =~ '_spec$' | let b:dispatch = 'rspec %' | endif
   augroup END
@@ -365,10 +365,9 @@ endif
 
 " vim-textobj-quote ------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/textobj/quote.vim'))
-  augroup textobj_quote
+  augroup vimrc_textobj_quote
     autocmd!
-    autocmd FileType markdown call textobj#quote#init()
-    autocmd FileType text     call textobj#quote#init()
+    autocmd FileType markdown,text call textobj#quote#init()
   augroup END
 endif
 
@@ -378,7 +377,12 @@ endif
 " Colors & Highlighting --------------------------------------------------------
 " Everyone's favorite colorscheme
 if !empty(globpath(&rtp, '/colors/solarized.vim')) | colorscheme solarized | endif
-if exists('+background')     | set background=dark | endif
+" if !empty(globpath(&rtp, '/colors/hybrid.vim'))
+"   let g:hybrid_custom_term_colors = 1
+"   let g:hybrid_reduced_contrast = 1
+"   colorscheme hybrid
+" endif
+" if exists('+background')     | set background=dark | endif
 
 " Enable syntax highlighting, but limit on very long lines
 syntax on
@@ -388,11 +392,16 @@ if exists('+synmaxcol')      | set synmaxcol=200   | endif
 if exists('+hlsearch')       | set hlsearch        | endif
 
 " Shade bg after column 80 (for visual cue of suggested max line width)
-augroup colorcolumn
-  autocmd!
-  autocmd FileType ruby,sh,vim,css,scss,javascript if exists('+colorcolumn') |
-              \ let &l:colorcolumn=join(range(81,999),',') | endif
-augroup END
+if exists('+colorcolumn') 
+  let colorcolumn_fts = ['ruby', 'sh', 'vim', 'css', 'scss', 'javascript']
+  augroup vimrc_colorcolumn
+    autocmd!
+      autocmd FileType ruby,sh,vim,css,scss,javascript let &l:colorcolumn = join(range(81,999), ',')
+    " for ft in colorcolumn_fts
+    "   execute 'autocmd FileType ' . ft . ' setlocal colorcolumn=' . join(range(81,999), ',')
+    " endfor
+  augroup END
+endif
 
 " Folding ----------------------------------------------------------------------
 set foldlevel=2
@@ -437,6 +446,7 @@ if $TERM_PROGRAM =~# 'iTerm'
 
   " Italicize comments
   highlight Comment cterm=italic
+  highlight Normal ctermbg=none
 endif
 
 " WORKFLOW =====================================================================
@@ -588,8 +598,17 @@ command! -nargs=1 -complete=file -bar -bang Rm call RmFile('<args>', '<bang>')
 
 " File Metadata ----------------------------------------------------------------
 
-if exists(':filetype')    | filetype plugin indent on    | endif
 if exists('+fileformats') | set fileformats=unix,dos,mac | endif
+
+if exists('+filetype')
+  filetype plugin indent on
+
+  augroup vimrc_filetype
+    autocmd! | autocmd VimEnter {} setlocal filetype=markdown
+    autocmd BufNewFile * let b:foo = 'yes'
+  augroup END
+endif
+
 if exists('+encoding')
   set encoding=utf-8
   scriptencoding utf-8

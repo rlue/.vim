@@ -5,9 +5,15 @@ set guioptions=                           " Disable GUI chrome
 set lines=999 columns=85                  " Maximize window height
 
 " Colors -----------------------------------------------------------------------
-if !empty(globpath(&rtp, 'colors/papercolor.vim')) | colorscheme papercolor | endif
-if exists(':AirlineTheme') | AirlineTheme papercolor | endif
-set bg=light
+if !empty(globpath(&rtp, 'colors/hybrid.vim'))
+  let g:hybrid_reduced_contrast = 1
+  colorscheme hybrid
+  set background=dark
+endif
+" if !empty(globpath(&rtp, 'colors/papercolor.vim'))
+"   colorscheme papercolor
+"   set bg=light
+" endif
 
 " Fonts ------------------------------------------------------------------------
 if hostname() =~# 'sardanapalus'
