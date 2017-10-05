@@ -87,13 +87,6 @@ endif
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
-execute "set <M-f>=\ef" | nnoremap <M-f> :silent call vimrc#scroll_alt_window('f')<CR>
-execute "set <M-b>=\eb" | nnoremap <M-b> :silent call vimrc#scroll_alt_window('b')<CR>
-execute "set <M-d>=\ed" | nnoremap <M-d> :silent call vimrc#scroll_alt_window('d')<CR>
-execute "set <M-u>=\eu" | nnoremap <M-u> :silent call vimrc#scroll_alt_window('u')<CR>
-execute "set <M-e>=\ee" | nnoremap <M-e> :silent call vimrc#scroll_alt_window('e')<CR>
-execute "set <M-y>=\ey" | nnoremap <M-y> :silent call vimrc#scroll_alt_window('y')<CR>
-
 " " Find cursor
 " nnoremap <silent> <Leader><Leader> :call FlashLine()<CR>
 " function! FlashLine()
