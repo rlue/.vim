@@ -3,14 +3,18 @@ compiler ruby
 setlocal makeprg=ruby\ -wc\ %
 
 " Easy execute and test mappings
-nnoremap <Leader>r :exec 'w <bar> !ruby ' . fnameescape(expand('%:p'))<CR>
-nnoremap <Leader>m :make<CR>
-nnoremap <Leader>T :w <bar> !rspec<CR>
-nnoremap <Leader>t :exec 'w <bar> !rspec ' . fnameescape(expand('%:p'))<CR>
+nnoremap <buffer> <LocalLeader>r :exec 'w <bar> !ruby ' . fnameescape(expand('%:p'))<CR>
+nnoremap <buffer> <LocalLeader>m :make<CR>
 
 " " Set default directories for :find
 " setlocal path+=lib/**,spec/**
-set foldtext=ruby#foldtext()
+
+" Folding ----------------------------------------------------------------------
+if expand('%:t:r') !~ '_spec$'
+  setlocal nofoldenable
+  setlocal foldmethod=syntax
+  setlocal foldtext=ruby#foldtext()
+endif
 
 function! ruby#foldtext()
   let s:line = getline(v:foldstart)

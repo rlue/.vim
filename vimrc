@@ -87,6 +87,13 @@ endif
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
+execute "set <M-f>=\ef" | nnoremap <M-f> :silent call vimrc#scroll_alt_window('f')<CR>
+execute "set <M-b>=\eb" | nnoremap <M-b> :silent call vimrc#scroll_alt_window('b')<CR>
+execute "set <M-d>=\ed" | nnoremap <M-d> :silent call vimrc#scroll_alt_window('d')<CR>
+execute "set <M-u>=\eu" | nnoremap <M-u> :silent call vimrc#scroll_alt_window('u')<CR>
+execute "set <M-e>=\ee" | nnoremap <M-e> :silent call vimrc#scroll_alt_window('e')<CR>
+execute "set <M-y>=\ey" | nnoremap <M-y> :silent call vimrc#scroll_alt_window('y')<CR>
+
 " " Find cursor
 " nnoremap <silent> <Leader><Leader> :call FlashLine()<CR>
 " function! FlashLine()
@@ -100,7 +107,7 @@ noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 " Miscellaneous ----------------------------------------------------------------
 
 " $MYVIMRC source/edit
-nnoremap <Leader>ev :e'e ' . g:vim_home . '/**/'<CR>
+nnoremap <Leader>ev :e $MYVIMRC<CR>
 nnoremap <silent> <Leader>sv :call UpdateRCs() <Bar> source $MYVIMRC <Bar>
             \ if has('gui_running') <Bar> source $MYGVIMRC <Bar> endif<Bar>
             \ if exists(':AirlineRefresh') <Bar> AirlineRefresh <Bar> endif<CR>
@@ -159,15 +166,17 @@ endif
 call plug#begin()
 Plug '~/Projects/vim-barbaric'
 Plug '~/Projects/vim-fold-rspec'
+Plug '~/Projects/vim-getting-things-down'
+Plug '~/Projects/vim-rspec'
 
+Plug           'w0rp/ale'
 Plug         'jaxbot/browserlink.vim'
 Plug       'junegunn/goyo.vim'
 Plug        'morhetz/gruvbox'
 Plug       'junegunn/limelight.vim'
 Plug      'NLKNguyen/papercolor-theme'
-Plug  'vim-syntastic/syntastic'
+Plug    'AndrewRadev/splitjoin.vim'
 Plug        'wincent/terminus'
-" Plug         'gioele/vim-autoswap', { 'branch': 'any-terminal-macos' }
 Plug    'altercation/vim-colors-solarized'
 Plug          'tpope/vim-commentary'
 Plug             'ap/vim-css-color'
@@ -178,10 +187,9 @@ Plug       'justinmk/vim-dirvish'
 Plug          'tpope/vim-dispatch'
 Plug       'junegunn/vim-easy-align'
 " Plug           'rlue/vim-fold-rspec'
-Plug          'tpope/vim-fugitive'
 Plug       'jamessan/vim-gnupg'
 Plug 'ludovicchabant/vim-gutentags'
-Plug           'rlue/vim-getting-things-down'
+" Plug           'rlue/vim-getting-things-down'
 Plug           'w0ng/vim-hybrid'
 Plug         'henrik/vim-indexed-search'
 Plug       'pangloss/vim-javascript'
@@ -189,7 +197,7 @@ Plug          'tpope/vim-liquid'
 Plug          'tpope/vim-rails'
 Plug          'tpope/vim-repeat'
 Plug          'tpope/vim-rsi'
-Plug     'thoughtbot/vim-rspec'
+" Plug     'thoughtbot/vim-rspec'
 Plug          'tpope/vim-sensible'
 Plug          'tpope/vim-sleuth'
 Plug  'slim-template/vim-slim'
@@ -197,6 +205,7 @@ Plug          'tpope/vim-speeddating'
 Plug          'tpope/vim-surround'
 Plug           'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
 Plug          'tpope/vim-unimpaired'
+Plug          'posva/vim-vue'
 
 if executable('fzf') && v:version >= 740 && !has('gui_running')
   Plug isdirectory('/usr/local/opt/fzf') ? '/usr/local/opt/fzf' : '~/.fzf'
@@ -204,6 +213,16 @@ if executable('fzf') && v:version >= 740 && !has('gui_running')
 endif
 
 call plug#end()
+
+" ALE --------------------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/ale.vim'))
+  let g:ale_set_quickfix = 1
+  let g:ale_lint_on_text_changed = 'normal'
+  let g:ale_lint_on_insert_leave = 1
+  nnoremap <Leader>at :ALEToggle<CR>
+  nnoremap <Leader>ad :ALEDetail<CR>
+  nnoremap <Leader>al :ALELint<CR>
+endif
 
 " browserlink.vim --------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/browserlink.vim'))
@@ -241,6 +260,14 @@ if !empty(globpath(&rtp, '/plugin/fzf.vim')) && executable('fzf') && !has('gui_r
   nnoremap <Leader>eb :Buffers<CR>
 endif
 
+" goyo -------------------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/goyo.vim'))
+  augroup vimrc_goyo
+    autocmd!
+    autocmd FileType markdown nnoremap <buffer> <Leader>f :Goyo<CR>
+  augroup END
+endif
+
 " limelight --------------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/limelight.vim'))
   let g:limelight_default_coefficient = 0.7   " Set deeper default shading
@@ -252,30 +279,6 @@ if !empty(globpath(&rtp, '/plugin/limelight.vim'))
       autocmd User GoyoLeave Limelight!
     augroup END
   endif
-endif
-
-" syntastic --------------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/syntastic.vim'))
-  let g:syntastic_ruby_checkers = ['rubocop']
-  let g:syntastic_slim_checkers = ['slim_lint']
-  let g:syntastic_vim_checkers  = ['vint']
-  let g:syntastic_scss_checkers = ['sass_lint']
-  let g:syntastic_mode_map      = { 'mode':              'passive',
-              \                     'active_filetypes':  [],
-              \                     'passive_filetypes': [''] }
-
-  " per https://github.com/Kuniwak/vint/issues/198
-  let g:syntastic_vim_vint_exe = 'LC_CTYPE=UTF-8 vint'
-
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_check_on_wq = 0
-
-  " " Close location list (i.e., error list) on :bd
-  " cabbrev <silent> bd <C-r>=(getcmdtype()==#':' && getcmdpos()==1 ? 
-  "                            \ 'lclose\|bdelete' : 'bd')<CR>
-
-  nnoremap <Leader>sc :SyntasticCheck<CR>
-  nnoremap <Leader>st :SyntasticToggleMode<CR>
 endif
 
 " vim-airline ------------------------------------------------------------------
@@ -318,7 +321,8 @@ if !empty(globpath(&rtp, '/plugin/dispatch.vim'))
 
   augroup vimrc_dispatch
     autocmd!
-    autocmd FileType ruby if expand('%:t:r') =~ '_spec$' | let b:dispatch = 'rspec %' | endif
+    autocmd FileType ruby
+          \ if expand('%:t:r') =~ '_spec$' | let b:dispatch = 'rspec %' | endif
   augroup END
 endif
 
@@ -362,6 +366,28 @@ if !empty(globpath(&rtp, '/plugin/getting_things_down.vim'))
 endif
 
 " vim-rspec --------------------------------------------------------------------
+if !empty(globpath(&rtp, '/plugin/rspec.vim'))
+  if !empty(globpath(&rtp, '/plugin/dispatch.vim'))
+    let g:rspec_command = "Dispatch rspec {spec}"
+  endif
+
+  if has('gui')
+    let g:rspec_runner = "os_x_iterm"
+  endif
+
+  augroup vimrc_rspec
+    autocmd!
+    autocmd FileType ruby call s:set_rspec_maps()
+  augroup END
+
+  function! s:set_rspec_maps()
+    nnoremap <buffer> <LocalLeader>ss :call RunCurrentSpecFile()<CR>
+    nnoremap <buffer> <LocalLeader>se :call RunExamples()<CR>
+    vnoremap <buffer> <LocalLeader>se :call RunExamples()<CR>
+    nnoremap <buffer> <LocalLeader>sr :call RunLastSpec()<CR>
+    nnoremap <buffer> <LocalLeader>sa :call RunAllSpecs()<CR>
+  endfunction
+endif
 
 " vim-textobj-quote ------------------------------------------------------------
 if !empty(globpath(&rtp, '/plugin/textobj/quote.vim'))
@@ -382,7 +408,7 @@ if !empty(globpath(&rtp, '/colors/solarized.vim')) | colorscheme solarized | end
 "   let g:hybrid_reduced_contrast = 1
 "   colorscheme hybrid
 " endif
-" if exists('+background')     | set background=dark | endif
+if exists('+background')     | set background=dark | endif
 
 " Enable syntax highlighting, but limit on very long lines
 syntax on
@@ -393,18 +419,79 @@ if exists('+hlsearch')       | set hlsearch        | endif
 
 " Shade bg after column 80 (for visual cue of suggested max line width)
 if exists('+colorcolumn') 
-  let colorcolumn_fts = ['ruby', 'sh', 'vim', 'css', 'scss', 'javascript']
-  augroup vimrc_colorcolumn
-    autocmd!
-      autocmd FileType ruby,sh,vim,css,scss,javascript let &l:colorcolumn = join(range(81,999), ',')
-    " for ft in colorcolumn_fts
-    "   execute 'autocmd FileType ' . ft . ' setlocal colorcolumn=' . join(range(81,999), ',')
-    " endfor
-  augroup END
+  let &colorcolumn = join(range(81,999), ',')
+  " autocmd VimEnter * let &l:colorcolumn = ''
+  " let colorcolumn_fts = ['ruby', 'sh', 'vim', 'css', 'scss', 'javascript', 'slim']
+  " augroup vimrc_colorcolumn
+  "   autocmd!
+  "   execute 'autocmd FileType ' .
+  "         \ join(colorcolumn_fts, ',') .
+  "         \ ' let &l:colorcolumn= join(range(81,999), \',\')'
+  " augroup END
 endif
 
 " Folding ----------------------------------------------------------------------
 set foldlevel=2
+
+" Accepts an optional callback function to define additional folding rules
+function! FoldCommentHeadings(lnum, ...)
+  if s:heading_level(a:lnum)
+    return '>' . s:heading_level(a:lnum)
+  elseif s:end_of_hsubtree(a:lnum)
+    return s:heading_level(nextnonblank(a:lnum))
+  elseif getline(nextnonblank(a:lnum)) =~# '^" -\{3,\}'
+    return 0
+  elseif a:0 && exists('*' . a:1)
+    return call(a:1, [a:lnum])
+  else
+    return '='
+  endif
+endfunction
+
+function! s:heading_level(lnum)
+  let l:rgx = substitute(&l:commentstring, '%s$', '', '') . ' .\+ \(=\+\|-\+\)'
+  if matchend(getline(a:lnum), l:rgx) == 80
+    return getline(a:lnum) =~# '=$' ? 1 : 2
+  endif
+endfunction
+
+function! s:end_of_hsubtree(lnum)
+  return empty(getline(a:lnum)) &&
+              \ 0 < s:heading_level(nextnonblank(a:lnum)) &&
+              \ s:heading_level(nextnonblank(a:lnum)) <= s:parent_hlevel(a:lnum)
+endfunction
+
+function! s:parent_hlevel(lnum)
+  if s:heading_level(a:lnum)
+    return s:heading_level(a:lnum)
+  elseif a:lnum > 1
+    return s:parent_hlevel(a:lnum - 1)
+  endif
+endfunction
+
+" Accepts an optional callback function to define custom foldtext
+function! FoldText(...)
+  let l:stats_func = (a:0 && exists('*' . a:1)) ? a:1 : 's:stats'
+
+  let s:line = getline(v:foldstart)
+  let s:preview_maxwidth = 80 - 1 - (strdisplaywidth(call(l:stats_func, []))) - 2
+
+  let s:preview = s:line[0:(s:preview_maxwidth - 1)]
+
+  let s:padding = repeat('-', s:preview_maxwidth - strdisplaywidth(s:preview) + 1)
+  let s:padding = substitute(s:padding, '\(^.\|.$\)', ' ', 'g')
+
+  return s:preview . s:padding . call(l:stats_func, []) . ' -'
+endfunction
+
+function! s:stats()
+  let l:fold_range = range(v:foldstart + 1, v:foldend)
+
+  " don't count blank lines or comments
+  call filter(l:fold_range, "getline(v:val) !~# '^\\(\\W*$\\|\\s*" .
+        \ substitute(&l:commentstring, '%s$', '') . " \\)'")
+  return '[' . len(l:fold_range) . ']'
+endfunction
 
 " Hints ------------------------------------------------------------------------
 " Show relative line numbers in left sidebar
@@ -600,14 +687,7 @@ command! -nargs=1 -complete=file -bar -bang Rm call RmFile('<args>', '<bang>')
 
 if exists('+fileformats') | set fileformats=unix,dos,mac | endif
 
-if exists('+filetype')
-  filetype plugin indent on
-
-  augroup vimrc_filetype
-    autocmd!
-    autocmd VimEnter {} setlocal filetype=markdown
-  augroup END
-endif
+if exists('+filetype') | filetype plugin indent on | endif
 
 if exists('+encoding')
   set encoding=utf-8
