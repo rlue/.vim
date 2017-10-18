@@ -163,13 +163,12 @@ Plug '~/Projects/vim-getting-things-down'
 Plug '~/Projects/vim-rspec'
 
 Plug           'w0rp/ale'
-Plug         'jaxbot/browserlink.vim'
+" Plug         'jaxbot/browserlink.vim'
 Plug       'junegunn/goyo.vim'
 Plug        'morhetz/gruvbox'
 Plug       'junegunn/limelight.vim'
 Plug      'NLKNguyen/papercolor-theme'
 Plug    'AndrewRadev/splitjoin.vim'
-Plug        'wincent/terminus'
 Plug    'altercation/vim-colors-solarized'
 Plug          'tpope/vim-commentary'
 Plug             'ap/vim-css-color'
@@ -200,9 +199,20 @@ Plug           'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
 Plug          'tpope/vim-unimpaired'
 Plug          'posva/vim-vue'
 
+" Include fzf whether installed via Homebrew or user-locally
 if executable('fzf') && v:version >= 740 && !has('gui_running')
-  Plug isdirectory('/usr/local/opt/fzf') ? '/usr/local/opt/fzf' : '~/.fzf'
-  Plug 'junegunn/fzf.vim'
+  let fzf_dirs = ['~/.fzf']
+
+  if executable('brew')
+    call add(fzf_dirs, systemlist('brew --prefix')[0] . '/opt/fzf')
+  endif
+
+  for dir in fzf_dirs
+    if isdirectory(dir)
+      Plug dir | Plug 'junegunn/fzf.vim'
+      break
+    endif
+  endfor
 endif
 
 call plug#end()
