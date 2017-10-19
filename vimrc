@@ -123,27 +123,6 @@ nnoremap Q <Nop>
 " Switch from Search to Replace super fast!
 " nmap <expr> M ':%s/' . @/ . '//g<LEFT><LEFT>'
 
-" PER-MACHINE ==================================================================
-
-" Seedbox ----------------------------------------------------------------------
-" Reset colorscheme
-if hostname() =~# 'porphyrion' | colorscheme default | endif
-
-" Default Working Directory ----------------------------------------------------
-" if has('win32')
-"   if $COMPUTERNAME == "ODALISQUE"
-"     :cd $HOMEPATH/Dropbox
-"   endif
-" elseif has('unix')
-"   if hostname() =~ "liberte"
-"     :cd $HOME/Dropbox/
-"   elseif hostname() =~ "sardanapalus"
-"     :cd $HOME/Dropbox/Work
-"   endif
-" else
-"     :cd $HOME/
-" endif
-
 " PLUGINS ======================================================================
 
 " vim-plug ---------------------------------------------------------------------
@@ -715,3 +694,26 @@ if v:shell_error == 0
   if exists('+grepformat') | set grepformat=%f:%l:%c:%m    | endif
 endif
 
+" PER-MACHINE ==================================================================
+" Seedbox ----------------------------------------------------------------------
+" Reset colorscheme
+if hostname() =~# 'porphyrion' | colorscheme default | endif
+
+" Default Working Directory ----------------------------------------------------
+" if has('win32')
+"   if $COMPUTERNAME == "ODALISQUE"
+"     :cd $HOMEPATH/Dropbox
+"   endif
+" elseif has('unix')
+"   if hostname() =~ "liberte"
+"     :cd $HOME/Dropbox/
+"   elseif hostname() =~ "sardanapalus"
+"     :cd $HOME/Dropbox/Work
+"   endif
+" else
+"     :cd $HOME/
+" endif
+" Terminal colors --------------------------------------------------------------
+if has('unix') && hostname() =~ "sardanapalus"
+  colorscheme hybrid
+endif
