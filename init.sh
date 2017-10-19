@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# [ "$_" = "$0" ] checks whether the script is being sourced or run
+# (this script needs to be SOURCED.)
 if [ "$_" = "$0" ]; then
   cat <<EOF
 This script aliases the vim and gvim commands to be run using
