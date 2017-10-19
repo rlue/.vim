@@ -59,11 +59,6 @@ That’s a real mouthful. Instead, try the included script to alias `vim` and `g
 
 ```
 $ git clone https://github.com/rlue/.vim ~/Downloads/vim
-Cloning into 'Downloads/vim'...
-remote: Counting objects: 39, done.
-remote: Compressing objects: 100% (28/28), done.
-remote: Total 39 (delta 3), reused 39 (delta 3), pack-reused 0
-Unpacking objects: 100% (39/39), done.
 $ source ~/Downloads/vim/init.sh
 ```
 
