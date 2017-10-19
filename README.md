@@ -40,7 +40,7 @@ let $MYGVIMRC  = g:vim_home . '/gvimrc'
 
 The number in brackets on the right indicates how many lines of code (_i.e.,_ non-blank, non-comment) there are in the fold.
 
-I used to have all these sections [broken out as separate files, stored in a `config/` directory and source in a `for` loop in `vimrc`][modularity]. That was pretty good, and [romainl even pointed out that I could just put them in a `plugin/` directory and ditch the `for` loop altogether][romainl], but I like this even better. 
+I used to have all these sections [broken out as separate files, stored in a `config/` directory and sourced in a `for` loop in `vimrc`][modularity]. That was pretty good, and [romainl even pointed out that I could just put them in a `plugin/` directory and ditch the `for` loop altogether][romainl], but I like this even better. 
 
 `ftplugin/vim.vim` is where the magic happens. Headings are any commented lines exactly 80 characters long, ending in a space followed by string of `=` or `-` characters. Functions get folded, too.
 
