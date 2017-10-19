@@ -32,7 +32,7 @@ elif hash mvim 2>/dev/null; then
   gvimbin=$(which mvim)
 fi
 
-if [ -n $vimbin ]; then
+if [ -n "$vimbin" ]; then
   alias vim="$vimbin -Nu \"$vimhome/vimrc\" --cmd \"let &rtp = substitute(&rtp, \\\"$HOME/.vim\\\", \\\"$vimhome\\\", \\\"g\\\")\" $*"
   modified=1
   echo "vim has been aliased"
@@ -40,7 +40,7 @@ else
   echo "vim could not be found."
 fi
 
-if [ -n $gvimbin ]; then
+if [ -n "$gvimbin" ]; then
   alias gvim="$gvimbin -Nu \"$vimhome/vimrc\" -U \"$vimhome/gvimrc\" --cmd \"let &rtp = substitute(&rtp, \\\"$HOME/.vim\\\", \\\"$vimhome\\\", \\\"g\\\")\" $*"
   modified=1
   echo "gvim has been aliased"
@@ -48,7 +48,7 @@ else
   echo "gvim could not be found."
 fi
 
-if [ -n $modified ]; then
+if [ -n "$modified" ]; then
   cat <<EOF
 
 To restore the vim and gvim commands to their original state,
