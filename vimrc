@@ -159,7 +159,6 @@ Plug          'tpope/vim-dispatch'
 Plug       'junegunn/vim-easy-align'
 " Plug           'rlue/vim-fold-rspec'
 Plug       'jamessan/vim-gnupg'
-Plug 'ludovicchabant/vim-gutentags'
 " Plug           'rlue/vim-getting-things-down'
 Plug           'w0ng/vim-hybrid'
 Plug         'henrik/vim-indexed-search'
@@ -178,7 +177,12 @@ Plug           'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
 Plug          'tpope/vim-unimpaired'
 Plug          'posva/vim-vue'
 
-" Include fzf whether installed via Homebrew or user-locally
+" Gutentags issues a compatibilty warning on unsupported versions
+if v:version >= 740
+  Plug 'ludovicchabant/vim-gutentags'
+endif
+
+" fzf.vim depends on a third-party binary
 if executable('fzf') && v:version >= 740 && !has('gui_running')
   let fzf_dirs = ['~/.fzf']
 

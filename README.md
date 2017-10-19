@@ -55,7 +55,7 @@ In any case, it can be done — but it usually involves getting all jumbled up i
 $ vim -Nu <vimrc> --cmd "let &rtp = substitute(&rtp, \"$HOME/.vim\", <vim_home>, 'g')" $*
 ```
 
-That’s a real mouthful. Instead, try the included `bin/vim` and `bin/gvim` launcher scripts:
+That’s a real mouthful. Instead, try the included script to alias `vim` and `gvim` to the command above:
 
 ```
 $ git clone https://github.com/rlue/.vim ~/Downloads/vim
@@ -64,7 +64,7 @@ remote: Counting objects: 39, done.
 remote: Compressing objects: 100% (28/28), done.
 remote: Total 39 (delta 3), reused 39 (delta 3), pack-reused 0
 Unpacking objects: 100% (39/39), done.
-$ ~/Downloads/vim/bin/vim
+$ source ~/Downloads/vim/init.sh
 ```
 
 With this, you can test drive my vim config, no strings attached, and get things right back to the way they were with
