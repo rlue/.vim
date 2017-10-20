@@ -1,0 +1,42 @@
+# To load the shims in this directory, simply source this file:
+#
+#     $ source vim/shims/load
+
+shimdir=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
+export VIMHOME="$(dirname $shimdir)"
+
+# 1. Clean up $PATH ------------------------------------------------------------
+# per https://stackoverflow.com/a/24057360/4865822
+case "$PATH" in
+  *"vimshims"*) 
+    export PATH="$(echo $PATH | awk -F: '{for (i=1; i<=NF; i++) if ($i !~ /vimshims/) {printf "%s%s", $i, (i==NF? RS : FS)}}')";;
+  *) :;;
+esac
+
+# 2. Find system vim -----------------------------------------------------------
+if [ -x "/Applications/MacVim.app/Contents/MacOS/vim" ]; then
+  export VIMBIN="/Applications/MacVim.app/Contents/MacOS/vim"
+elif hash vim 2>/dev/null; then
+  export VIMBIN="$(which vim)"
+fi
+
+# 3. Find system gvim ----------------------------------------------------------
+if hash gvim 2>/dev/null; then
+  export GVIMBIN=$(which gvim)
+elif hash mvim 2>/dev/null; then
+  export GVIMBIN=$(which mvim)
+fi
+
+# 4. Load shims onto $PATH -----------------------------------------------------
+if [ -n "$VIMBIN" -o -n "$GVIMBIN" ]; then
+  export PATH="$shimdir:$PATH"
+  echo "Success!"
+  echo "vim and gvim will now run using the included configuration."
+  echo "To restore them to their original state, simply restart the shell"
+  echo "or move/remove this configuration directory ($VIMHOME)."
+else
+  echo "vim could not be found" >&2
+  echo "Make sure vim is installed and located on your \$PATH, then try again." >&2
+fi
+
+# vim:ft=sh

@@ -1,0 +1,13 @@
+#! /bin/sh
+
+if [ -n "$VIMHOME" -a -n "$GVIMBIN" ] ; then
+  "$GVIMBIN" -Nu "$VIMHOME/vimrc" -U \"$VIMHOME/gvimrc\" --cmd "let &rtp = substitute(&rtp, \"$HOME/.vim\", \"$VIMHOME\", \"g\")" "$@"
+else
+  cat <<EOF
+To load this shim, run the following command:
+
+  $ source $(cd $(dirname $0) ; pwd)/load
+
+EOF
+  exit 1
+fi
