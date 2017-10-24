@@ -184,7 +184,7 @@ endif
 
 " fzf.vim depends on a third-party binary
 if executable('fzf') && v:version >= 740 && !has('gui_running')
-  let fzf_dirs = ['~/.fzf']
+  let fzf_dirs = [$HOME . '/.fzf']
 
   if executable('brew')
     call add(fzf_dirs, systemlist('brew --prefix')[0] . '/opt/fzf')
@@ -699,9 +699,29 @@ if v:shell_error == 0
 endif
 
 " PER-MACHINE ==================================================================
-" Seedbox ----------------------------------------------------------------------
-" Reset colorscheme
-if hostname() =~# 'porphyrion' | colorscheme default | endif
+" Helper functions -------------------------------------------------------------
+function! s:sessionLaunchedOn(machine)
+  if has('unix')
+    if hostname() =~? a:machine | return 1 | endif
+    if empty($SSH_CONNECTION) | return 0 | endif
+
+    if !exists('s:dig_answer')
+      let s:client_ip = split($SSH_CONNECTION)[0]
+      let s:dig_answer = system('dig -x ' . s:client_ip . ' | grep -A1 "^;; ANSWER" | tail -n1')
+    endif
+
+    return s:dig_answer =~? a:machine
+  elseif has('win32')
+    return $COMPUTERNAME ==? a:machine
+  endif
+endfunction
+
+" Terminal colors --------------------------------------------------------------
+if s:sessionLaunchedOn('sardanapalus')
+  colorscheme hybrid
+elseif s:sessionLaunchedOn('porphyrion')
+  colorscheme default
+endif
 
 " Default Working Directory ----------------------------------------------------
 " if has('win32')
@@ -717,7 +737,3 @@ if hostname() =~# 'porphyrion' | colorscheme default | endif
 " else
 "     :cd $HOME/
 " endif
-" Terminal colors --------------------------------------------------------------
-if has('unix') && hostname() =~ "sardanapalus"
-  colorscheme hybrid
-endif
