@@ -55,11 +55,11 @@ In any case, it can be done — but it usually involves getting all jumbled up i
 $ vim -Nu <vimrc> --cmd "let &rtp = substitute(&rtp, \"$HOME/.vim\", <vim_home>, 'g')"
 ```
 
-That’s a real mouthful. Instead, try loading the included shims onto your `$PATH`:
+That’s a real mouthful. Instead, try loading the included binstubs onto your `$PATH`:
 
 ```
 $ git clone https://github.com/rlue/.vim ~/Downloads/vim
-$ source ~/Downloads/vim/vimshims/load
+$ source ~/Downloads/vim/vimstubs/load
 ```
 
 Now, the `vim` and `gvim` commands will automatically load this configuration, so you can test drive it with no strings attached. To get things back to the way they were, simply restart your shell, or

@@ -1,15 +1,15 @@
-# To load the shims in this directory, simply source this file:
+# To load the stubs in this directory, simply source this file:
 #
-#     $ source vim/shims/load
+#     $ source vim/stubs/load
 
-shimdir=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
-export VIMHOME="$(dirname $shimdir)"
+stubdir=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
+export VIMHOME="$(dirname $stubdir)"
 
 # 1. Clean up $PATH ------------------------------------------------------------
 # per https://stackoverflow.com/a/24057360/4865822
 case "$PATH" in
-  *"vimshims"*) 
-    export PATH="$(echo $PATH | awk -F: '{for (i=1; i<=NF; i++) if ($i !~ /vimshims/) {printf "%s%s", $i, (i==NF? RS : FS)}}')";;
+  *"vimstubs"*) 
+    export PATH="$(echo $PATH | awk -F: '{for (i=1; i<=NF; i++) if ($i !~ /vimstubs/) {printf "%s%s", $i, (i==NF? RS : FS)}}')";;
   *) :;;
 esac
 
@@ -27,9 +27,9 @@ elif hash mvim 2>/dev/null; then
   export GVIMBIN=$(which mvim)
 fi
 
-# 4. Load shims onto $PATH -----------------------------------------------------
+# 4. Load stubs onto $PATH -----------------------------------------------------
 if [ -n "$VIMBIN" -o -n "$GVIMBIN" ]; then
-  export PATH="$shimdir:$PATH"
+  export PATH="$stubdir:$PATH"
   echo "Success!"
   echo "vim and gvim will now run using the included configuration."
   echo "To restore them to their original state, simply restart the shell"
