@@ -7,8 +7,8 @@ let $MYGVIMRC  = g:vim_home . '/gvimrc'
 
 " MAPPINGS =====================================================================
 " Base -------------------------------------------------------------------------
-let mapleader = "\<Space>"
-let maplocalleader = "\\"
+let g:mapleader = "\<Space>"
+let g:maplocalleader = "\\"
 if exists('+wildcharm') | set wildcharm=<C-z> | endif
 
 " Text Manipulation ------------------------------------------------------------
@@ -43,12 +43,12 @@ nnoremap <Leader>l    a <Esc>h
 nnoremap <Leader><CR> i<CR><Esc>`.
 
 " More text objects! 
-for char in [ '_', '-', '.', ':', ',', ';', '<bar>',
+for s:delimiter in [ '_', '-', '.', ':', ',', ';', '<bar>',
             \ '/', '<bslash>', '*', '+', '%', '`' ]
-  execute 'xnoremap i' . char . ' :<C-u>normal! T' . char . 'vt' . char . '<CR>'
-  execute 'onoremap i' . char . ' :normal vi' . char . '<CR>'
-  execute 'xnoremap a' . char . ' :<C-u>normal! F' . char . 'vf' . char . '<CR>'
-  execute 'onoremap a' . char . ' :normal va' . char . '<CR>'
+  execute 'xnoremap i' . s:delimiter . ' :<C-u>normal! T' . s:delimiter . 'vt' . s:delimiter . '<CR>'
+  execute 'onoremap i' . s:delimiter . ' :normal vi' . s:delimiter . '<CR>'
+  execute 'xnoremap a' . s:delimiter . ' :<C-u>normal! F' . s:delimiter . 'vf' . s:delimiter . '<CR>'
+  execute 'onoremap a' . s:delimiter . ' :normal va' . s:delimiter . '<CR>'
 endfor
 
 " Buffer Management ------------------------------------------------------------
@@ -87,15 +87,15 @@ endif
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
-" " Find cursor
-" nnoremap <silent> <Leader><Leader> :call FlashLine()<CR>
-" function! FlashLine()
-"   for i in [30, 50, 30, 250]
-"     set cursorline!
-"     exec 'sleep ' . i . 'm'
-"     redraw
-"   endfor
-" endfunction
+" Find cursor
+nnoremap <silent> <Leader><Leader> :call FlashLine()<CR>
+function! FlashLine()
+  for s:i in [30, 50, 30, 250]
+    set cursorline!
+    exec 'sleep ' . s:i . 'm'
+    redraw
+  endfor
+endfunction
 
 " Miscellaneous ----------------------------------------------------------------
 
@@ -107,14 +107,14 @@ nnoremap <silent> <Leader>sv :call UpdateRCs() <Bar> source $MYVIMRC <Bar>
 
 " Save all open vimrc buffers, then source vimrc
 function! UpdateRCs()
-  let this_buf    = bufnr('%')
-  let open_bufs   = filter(range(1, bufnr('$')), 'buflisted(v:val)')
-  let config_bufs = filter(open_bufs, 
+  let l:this_buf    = bufnr('%')
+  let l:open_bufs   = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+  let l:config_bufs = filter(l:open_bufs, 
               \           "expand('#' . v:val . ':p') =~# '^" . g:vim_home . "/g\\=vimrc'")
-  for bufnr in config_bufs
-    exec bufnr . 'buffer | update'
+  for l:bufnr in l:config_bufs
+    exec l:bufnr . 'buffer | update'
   endfor
-  exec this_buf . 'buffer'
+  exec l:this_buf . 'buffer'
 endfunction
 
 " Disable Ex mode (http://www.bestofvim.com/tip/leave-ex-mode-good/)
@@ -154,6 +154,7 @@ Plug             'ap/vim-css-color'
 Plug    'vim-airline/vim-airline'
 Plug    'vim-airline/vim-airline-themes'
 Plug    'nathangrigg/vim-beancount'
+Plug          'tpope/vim-bundler'
 Plug       'justinmk/vim-dirvish'
 Plug          'tpope/vim-dispatch'
 Plug       'junegunn/vim-easy-align'
@@ -164,6 +165,7 @@ Plug           'w0ng/vim-hybrid'
 Plug         'henrik/vim-indexed-search'
 Plug       'pangloss/vim-javascript'
 Plug          'tpope/vim-liquid'
+Plug       'powerman/vim-plugin-AnsiEsc'
 Plug          'tpope/vim-rails'
 Plug          'tpope/vim-repeat'
 Plug          'tpope/vim-rsi'
@@ -184,13 +186,13 @@ endif
 
 " fzf.vim depends on a third-party binary
 if executable('fzf') && v:version >= 740 && !has('gui_running')
-  let fzf_dirs = [$HOME . '/.fzf']
+  let s:fzf_dirs = [$HOME . '/.fzf']
 
   if executable('brew')
-    call add(fzf_dirs, systemlist('brew --prefix')[0] . '/opt/fzf')
+    call add(s:fzf_dirs, systemlist('brew --prefix')[0] . '/opt/fzf')
   endif
 
-  for dir in fzf_dirs
+  for dir in s:fzf_dirs
     if isdirectory(dir)
       Plug dir | Plug 'junegunn/fzf.vim'
       break
@@ -201,7 +203,7 @@ endif
 call plug#end()
 
 " ALE --------------------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/ale.vim'))
+if !empty(globpath(&runtimepath, '/plugin/ale.vim'))
   let g:ale_set_quickfix = 1
   let g:ale_lint_on_text_changed = 'normal'
   let g:ale_lint_on_insert_leave = 1
@@ -211,7 +213,7 @@ if !empty(globpath(&rtp, '/plugin/ale.vim'))
 endif
 
 " browserlink.vim --------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/browserlink.vim'))
+if !empty(globpath(&runtimepath, '/plugin/browserlink.vim'))
   let g:bl_no_mappings   = 1        " Disable default mappings
 
   " Override BL's built-in autocmd (give Jekyll time to rebuild before first)
@@ -241,13 +243,13 @@ if !empty(globpath(&rtp, '/plugin/browserlink.vim'))
 endif
 
 " fzf.vim ----------------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/fzf.vim')) && executable('fzf') && !has('gui_running')
+if !empty(globpath(&runtimepath, '/plugin/fzf.vim')) && executable('fzf') && !has('gui_running')
   nnoremap <Leader>ef :Files<CR>
   nnoremap <Leader>eb :Buffers<CR>
 endif
 
 " goyo -------------------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/goyo.vim'))
+if !empty(globpath(&runtimepath, '/plugin/goyo.vim'))
   augroup vimrc_goyo
     autocmd!
     autocmd FileType markdown nnoremap <buffer> <Leader>f :Goyo<CR>
@@ -255,7 +257,7 @@ if !empty(globpath(&rtp, '/plugin/goyo.vim'))
 endif
 
 " limelight --------------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/limelight.vim'))
+if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
   let g:limelight_default_coefficient = 0.7   " Set deeper default shading
 
   if exists(':Goyo')
@@ -268,7 +270,7 @@ if !empty(globpath(&rtp, '/plugin/limelight.vim'))
 endif
 
 " vim-airline ------------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/airline.vim'))
+if !empty(globpath(&runtimepath, '/plugin/airline.vim'))
   let g:airline_powerline_fonts                   = 1
   let g:airline#extensions#whitespace#enabled     = 0
   let g:airline#extensions#tabline#enabled        = 1
@@ -276,17 +278,17 @@ if !empty(globpath(&rtp, '/plugin/airline.vim'))
 endif
 
 " vim-autoswap -----------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/autoswap.vim'))
+if !empty(globpath(&runtimepath, '/plugin/autoswap.vim'))
   let g:autoswap_detect_tmux = 1
 endif
 
 " vim-barbarian ----------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/barbarian.vim'))
+if !empty(globpath(&runtimepath, '/plugin/barbarian.vim'))
   let g:barbarian_default = 0
 endif
 
 " vim-dirvish ------------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/dirvish.vim'))
+if !empty(globpath(&runtimepath, '/plugin/dirvish.vim'))
   " Disable netrw
   let g:loaded_netrwPlugin = 1
 
@@ -302,7 +304,7 @@ if !empty(globpath(&rtp, '/plugin/dirvish.vim'))
 endif
 
 " vim-dispatch -----------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/dispatch.vim'))
+if !empty(globpath(&runtimepath, '/plugin/dispatch.vim'))
   nnoremap <F9> :Dispatch<CR>
 
   augroup vimrc_dispatch
@@ -313,7 +315,7 @@ if !empty(globpath(&rtp, '/plugin/dispatch.vim'))
 endif
 
 " vim-easy-align ---------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/easy_align.vim'))
+if !empty(globpath(&runtimepath, '/plugin/easy_align.vim'))
   " Start interactive EasyAlign in visual mode (e.g. vipga)
   xmap ga <Plug>(EasyAlign)
 
@@ -322,7 +324,7 @@ if !empty(globpath(&rtp, '/plugin/easy_align.vim'))
 endif
 
 " vim-fugitive -----------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/fugitive.vim'))
+if !empty(globpath(&runtimepath, '/plugin/fugitive.vim'))
   nnoremap <Leader>gm :Gmove<CR>
   nnoremap <Leader>gr :Gread<CR>
   nnoremap <Leader>gd :Gdiff<CR>
@@ -332,33 +334,19 @@ if !empty(globpath(&rtp, '/plugin/fugitive.vim'))
   nnoremap <Leader>gp :Gpush<CR>
   nnoremap <Leader>gl :Glog<CR>
   nnoremap <Leader>gb :Gblame<CR>
-endif
 
-" Clear out temporary buffers automatically
-" http://vimcasts.org/episodes/fugitive-vim-browsing-the-git-object-database/
-autocmd BufReadPost fugitive://* set bufhidden=delete
-
-" vim-getting-things-down ------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/getting_things_down.vim'))
-  " Quick-switch between current file and `TODO.md` of project root
-  nnoremap <Leader><Leader> :call getting_things_down#show_todo()<CR>
-
-  " Cycle through TODO keywords
-  nnoremap <silent> <Leader>c :call getting_things_down#cycle_status()<CR>
-
-  " Toggle TODO tasks
-  nnoremap <silent> <Leader>C :call getting_things_down#toggle_task()<CR>
-  vnoremap <silent> <Leader>C :call getting_things_down#toggle_task()<CR>
+  " Clear out temporary buffers automatically
+  " http://vimcasts.org/episodes/fugitive-vim-browsing-the-git-object-database/
+  augroup vimrc_fugitive
+    autocmd!
+    autocmd BufReadPost fugitive://* set bufhidden=delete
+  augroup END
 endif
 
 " vim-rspec --------------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/rspec.vim'))
-  if !empty(globpath(&rtp, '/plugin/dispatch.vim'))
-    let g:rspec_command = "Dispatch rspec {spec}"
-  endif
-
-  if has('gui')
-    let g:rspec_runner = "os_x_iterm"
+if !empty(globpath(&runtimepath, '/plugin/rspec.vim'))
+  if !empty(globpath(&runtimepath, '/plugin/dispatch.vim'))
+    let g:rspec_command = 'Dispatch rspec {spec}'
   endif
 
   augroup vimrc_rspec
@@ -376,7 +364,7 @@ if !empty(globpath(&rtp, '/plugin/rspec.vim'))
 endif
 
 " vim-textobj-quote ------------------------------------------------------------
-if !empty(globpath(&rtp, '/plugin/textobj/quote.vim'))
+if !empty(globpath(&runtimepath, '/plugin/textobj/quote.vim'))
   augroup vimrc_textobj_quote
     autocmd!
     autocmd FileType markdown,text call textobj#quote#init()
@@ -387,15 +375,6 @@ endif
 " This section concerns vim's user interface.
 
 " Colors & Highlighting --------------------------------------------------------
-" Everyone's favorite colorscheme
-if !empty(globpath(&rtp, '/colors/solarized.vim')) | colorscheme solarized | endif
-" if !empty(globpath(&rtp, '/colors/hybrid.vim'))
-"   let g:hybrid_custom_term_colors = 1
-"   let g:hybrid_reduced_contrast = 1
-"   colorscheme hybrid
-" endif
-if exists('+background')     | set background=dark | endif
-
 " Enable syntax highlighting, but limit on very long lines
 syntax on
 if exists('+synmaxcol')      | set synmaxcol=200   | endif
@@ -405,15 +384,13 @@ if exists('+hlsearch')       | set hlsearch        | endif
 
 " Shade bg after column 80 (for visual cue of suggested max line width)
 if exists('+colorcolumn') 
-  let &colorcolumn = join(range(81,999), ',')
-  " autocmd VimEnter * let &l:colorcolumn = ''
-  " let colorcolumn_fts = ['ruby', 'sh', 'vim', 'css', 'scss', 'javascript', 'slim']
-  " augroup vimrc_colorcolumn
-  "   autocmd!
-  "   execute 'autocmd FileType ' .
-  "         \ join(colorcolumn_fts, ',') .
-  "         \ ' let &l:colorcolumn= join(range(81,999), \',\')'
-  " augroup END
+  let s:colorcolumn_fts = ['ruby', 'sh', 'vim', 'css', 'scss', 'javascript']
+
+  augroup vimrc_colorcolumn
+    autocmd!
+    execute 'autocmd FileType ' . join(s:colorcolumn_fts, ',') .
+          \ ' let &l:colorcolumn = "' . join(range(81,999), ',') . '"'
+  augroup END
 endif
 
 " Folding ----------------------------------------------------------------------
@@ -545,13 +522,13 @@ if has('persistent_undo')         " Store vimundo within .vim/
       let l:path = expand(a:dir)
 
       if !isdirectory(l:path)
-        echohl WarningMsg | echo "Invalid directory" | echohl None
+        echohl WarningMsg | echo 'Invalid directory' | echohl None
         return 0
       endif
 
-      for file in split(glob(l:path . '/*'), "\n")
-        if localtime() > getftime(file) + 86400 * l:days && delete(file) != 0
-          echoerr 's:prune_old_files(): ' . file . ' could not be deleted'
+      for l:file in split(glob(l:path . '/*'), "\n")
+        if localtime() > getftime(l:file) + 86400 * l:days && delete(l:file) != 0
+          echoerr 's:prune_old_files(): ' . l:file . ' could not be deleted'
         endif
       endfor
     endfunction
@@ -562,7 +539,7 @@ endif
 
 " Encryption -------------------------------------------------------------------
 
-if has('crypt-blowfish2') | set cm=blowfish2 | endif
+if has('crypt-blowfish2') | set cryptmethod=blowfish2 | endif
 
 " File Persistence -------------------------------------------------------------
 
@@ -631,10 +608,10 @@ function! RmFile(target, bang)
   elseif isdirectory(a:target)
     if (a:bang ==# '!')
       " close all related buffers
-      let target_bufs = filter(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
+      let l:target_bufs = filter(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
                   \            "expand('#' . v:val . ':p') =~# fnamemodify(l:target, ':p')")
-      for buffer in target_bufs
-        execute 'bd!' . buffer
+      for l:buffer in l:target_bufs
+        execute 'bd!' . l:buffer
       endfor
 
       call delete(a:target, 'rf')
@@ -690,12 +667,16 @@ if exists('+wildignore') | set wildignore+=*/tmp/*,*.zip,*.swp,*.so | endif
 " External Tools ---------------------------------------------------------------
 
 " grep (ag)
-call system('type ag')
+for s:grepprg in ['rg', 'ag']
+  call system('type ' . s:grepprg)
+  if v:shell_error == 0
+    let s:grepprg = s:grepprg
+    break
+  endif
+endfor
 
-if v:shell_error == 0
-  if exists('+grepprg')    | set grepprg=ag\ --vimgrep\ $* | endif
-  if exists('+grepformat') | set grepformat=%f:%l:%c:%m    | endif
-endif
+if exists('+grepprg')    | let &grepprg = s:grepprg . ' --vimgrep $*' | endif
+if exists('+grepformat') | set grepformat=%f:%l:%c:%m                 | endif
 
 " PER-MACHINE ==================================================================
 " Helper functions -------------------------------------------------------------
@@ -716,10 +697,17 @@ function! s:sessionLaunchedOn(machine)
 endfunction
 
 " Terminal colors --------------------------------------------------------------
-if s:sessionLaunchedOn('sardanapalus')
-  colorscheme hybrid
-elseif s:sessionLaunchedOn('porphyrion')
-  colorscheme default
+if exists('+background')     | set background=dark | endif
+
+if exists(':colorscheme') == 2
+  if s:sessionLaunchedOn('sardanapalus') || s:sessionLaunchedOn('liberte')
+    if !empty(globpath(&runtimepath, '/colors/hybrid.vim'))
+      let g:hybrid_custom_term_colors = 1
+      colorscheme hybrid
+    endif
+  elseif s:sessionLaunchedOn('porphyrion')
+    colorscheme default
+  endif
 endif
 
 " Default Working Directory ----------------------------------------------------
