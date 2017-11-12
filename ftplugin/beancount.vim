@@ -4,4 +4,6 @@ setlocal foldmethod=expr
 setlocal foldexpr=FoldCommentHeadings(v:lnum)
 setlocal foldtext=FoldText()
 
-nnoremap <buffer> <LocalLeader>w :!bean-web %<CR>
+if executable('bean-web')
+  nnoremap <buffer> <LocalLeader>w :!bean-web %<CR>
+endif

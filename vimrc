@@ -4,6 +4,7 @@ let $MYVIMRC   = g:vim_home . '/vimrc'
 let $MYGVIMRC  = g:vim_home . '/gvimrc'
 
 " STAGING ======================================================================
+execute 'source ' . $VIMRUNTIME . '/ftplugin/man.vim'
 
 " MAPPINGS =====================================================================
 " Base -------------------------------------------------------------------------
@@ -136,13 +137,12 @@ if empty(glob(g:vim_home . '/autoload/plug.vim'))
 endif
 
 call plug#begin()
+
 Plug '~/Projects/vim-barbaric'
 Plug '~/Projects/vim-fold-rspec'
 Plug '~/Projects/vim-getting-things-down'
 Plug '~/Projects/vim-rspec'
 
-Plug           'w0rp/ale'
-" Plug         'jaxbot/browserlink.vim'
 Plug       'junegunn/goyo.vim'
 Plug        'morhetz/gruvbox'
 Plug       'junegunn/limelight.vim'
@@ -179,25 +179,30 @@ Plug           'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
 Plug          'tpope/vim-unimpaired'
 Plug          'posva/vim-vue'
 
-" Gutentags issues a compatibilty warning on unsupported versions
-if v:version >= 740
-  Plug 'ludovicchabant/vim-gutentags'
+" Plugins with version dependencies
+if v:version >= 800
+  Plug 'w0rp/ale'
 endif
 
-" fzf.vim depends on a third-party binary
-if executable('fzf') && v:version >= 740 && !has('gui_running')
-  let s:fzf_dirs = [$HOME . '/.fzf']
+if v:version >= 740
+  " Gutentags issues a compatibilty warning on unsupported versions
+  Plug 'ludovicchabant/vim-gutentags'
 
-  if executable('brew')
-    call add(s:fzf_dirs, systemlist('brew --prefix')[0] . '/opt/fzf')
-  endif
+  " fzf.vim depends on a third-party binary
+  if executable('fzf') && !has('gui_running')
+    let s:fzf_dirs = [$HOME . '/.fzf']
 
-  for dir in s:fzf_dirs
-    if isdirectory(dir)
-      Plug dir | Plug 'junegunn/fzf.vim'
-      break
+    if executable('brew')
+      call add(s:fzf_dirs, systemlist('brew --prefix')[0] . '/opt/fzf')
     endif
-  endfor
+
+    for dir in s:fzf_dirs
+      if isdirectory(dir)
+        Plug dir | Plug 'junegunn/fzf.vim'
+        break
+      endif
+    endfor
+  endif
 endif
 
 call plug#end()
@@ -212,40 +217,22 @@ if !empty(globpath(&runtimepath, '/plugin/ale.vim'))
   nnoremap <Leader>al :ALELint<CR>
 endif
 
-" browserlink.vim --------------------------------------------------------------
-if !empty(globpath(&runtimepath, '/plugin/browserlink.vim'))
-  let g:bl_no_mappings   = 1        " Disable default mappings
-
-  " Override BL's built-in autocmd (give Jekyll time to rebuild before first)
-  let g:bl_no_autoupdate = 1
-  let s:delay_interval   = '1500m'
-  let s:bl_pagefileexts  = 
-        \ [ 'html' , 'js'     , 'php'  ,
-        \   'css'  , 'scss'   , 'sass' ,
-        \   'slim' , 'liquid' , 'md'     ]
-
-  augroup vimrc_browserlink
-    autocmd!
-    exec 'autocmd BufWritePost *.' . join(s:bl_pagefileexts, ',*.') .
-          \ ' call s:trigger_reload("' . expand('%:p:h') . '")'
-  augroup END
-
-  function! s:trigger_reload(dir)
-    if filereadable(a:dir . '/_config.yml')         " in a Jekyll project root
-      exec 'sleep ' . s:delay_interval
-    elseif a:dir =~# $HOME . '\S\+'                 " somewhere inside home
-      call s:trigger_reload(fnamemodify(a:dir, ':h'))
-      return 0
-    endif
-
-    execute expand('%:e:e') =~? 'css' ? 'BLReloadCSS' : 'BLReloadPage' 
-  endfunction
-endif
-
 " fzf.vim ----------------------------------------------------------------------
 if !empty(globpath(&runtimepath, '/plugin/fzf.vim')) && executable('fzf') && !has('gui_running')
-  nnoremap <Leader>ef :Files<CR>
-  nnoremap <Leader>eb :Buffers<CR>
+  nnoremap <Leader>ff :Files<CR>
+  nnoremap <Leader>fb :Buffers<CR>
+  nnoremap <Leader>fl :Lines<CR>
+  nnoremap <Leader>fh :Helptags<CR>
+
+  if executable('rg') && (exists(':Rg') != 2)
+    command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+      \   <bang>0 ? fzf#vim#with_preview('up:60%')
+      \           : fzf#vim#with_preview('right:50%', '?'),
+      \   <bang>0)
+    nnoremap <Leader>fg :Rg 
+  endif
 endif
 
 " goyo -------------------------------------------------------------------------
@@ -269,17 +256,17 @@ if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
   endif
 endif
 
+" manpager.vim -----------------------------------------------------------------
+if filereadable($VIMRUNTIME . '/ftplugin/man.vim')
+  let g:ft_man_folding_enable = 1
+endif
+
 " vim-airline ------------------------------------------------------------------
 if !empty(globpath(&runtimepath, '/plugin/airline.vim'))
   let g:airline_powerline_fonts                   = 1
   let g:airline#extensions#whitespace#enabled     = 0
   let g:airline#extensions#tabline#enabled        = 1
   let g:airline#extensions#tabline#buffer_nr_show = 1
-endif
-
-" vim-autoswap -----------------------------------------------------------------
-if !empty(globpath(&runtimepath, '/plugin/autoswap.vim'))
-  let g:autoswap_detect_tmux = 1
 endif
 
 " vim-barbarian ----------------------------------------------------------------
@@ -343,6 +330,11 @@ if !empty(globpath(&runtimepath, '/plugin/fugitive.vim'))
   augroup END
 endif
 
+" vim-gutentags ----------------------------------------------------------------
+if !empty(globpath(&runtimepath, '/plugin/gutentags.vim'))
+  let g:gutentags_exclude_project_root = ['/usr/local', $HOME . '/.config']
+endif
+
 " vim-rspec --------------------------------------------------------------------
 if !empty(globpath(&runtimepath, '/plugin/rspec.vim'))
   if !empty(globpath(&runtimepath, '/plugin/dispatch.vim'))
@@ -384,7 +376,8 @@ if exists('+hlsearch')       | set hlsearch        | endif
 
 " Shade bg after column 80 (for visual cue of suggested max line width)
 if exists('+colorcolumn') 
-  let s:colorcolumn_fts = ['ruby', 'sh', 'vim', 'css', 'scss', 'javascript']
+  let s:colorcolumn_fts = ['sh', 'bash', 'vim', 'css', 'scss', 'javascript',
+        \                  'ruby', 'eruby', 'python']
 
   augroup vimrc_colorcolumn
     autocmd!
@@ -458,7 +451,7 @@ endfunction
 
 " Hints ------------------------------------------------------------------------
 " Show relative line numbers in left sidebar
-if exists('+number')         | set number          | endif
+if exists('+number')      | set number      | endif
 
 " Windows ----------------------------------------------------------------------
 " Open new windows below or to the right of the current buffer
@@ -586,9 +579,10 @@ function! MoveFile(dest, bang)
   endif
 
   execute 'saveas' . a:bang . ' ' . fnameescape(l:target) .
-              \ (isdirectory(l:target) ? expand('%:t') : '')
+        \ (isdirectory(l:target) ? expand('%:t') : '')
 
-  if !isdirectory(l:target) && fnamemodify(l:source, ':e') != fnamemodify(l:target, ':e')
+  if !isdirectory(l:target) &&
+        \ (fnamemodify(l:source, ':e') != fnamemodify(l:target, ':e'))
     edit
   endif
 
@@ -608,8 +602,10 @@ function! RmFile(target, bang)
   elseif isdirectory(a:target)
     if (a:bang ==# '!')
       " close all related buffers
-      let l:target_bufs = filter(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
-                  \            "expand('#' . v:val . ':p') =~# fnamemodify(l:target, ':p')")
+      let l:listed_bufs = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+      let l:target_bufs = filter(l:listed_bufs,
+            \ "expand('#' . v:val . ':p') =~# fnamemodify(l:target, ':p')")
+
       for l:buffer in l:target_bufs
         execute 'bd!' . l:buffer
       endfor
@@ -666,17 +662,17 @@ if exists('+wildignore') | set wildignore+=*/tmp/*,*.zip,*.swp,*.so | endif
 
 " External Tools ---------------------------------------------------------------
 
-" grep (ag)
-for s:grepprg in ['rg', 'ag']
-  call system('type ' . s:grepprg)
-  if v:shell_error == 0
-    let s:grepprg = s:grepprg
-    break
+" grep (repgrip/ag)
+if exists('+grepprg') && exists('+grepformat')
+  if executable('rg')
+    let s:grepprg = 'rg'
+  elseif executable('ag')
+    let s:grepprg = 'ag'
   endif
-endfor
 
-if exists('+grepprg')    | let &grepprg = s:grepprg . ' --vimgrep $*' | endif
-if exists('+grepformat') | set grepformat=%f:%l:%c:%m                 | endif
+  let &grepprg = s:grepprg . ' --vimgrep $*' 
+  let &grepformat = '%f:%l:%c:%m'             
+endif
 
 " PER-MACHINE ==================================================================
 " Helper functions -------------------------------------------------------------
