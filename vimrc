@@ -4,7 +4,6 @@ let $MYVIMRC   = g:vim_home . '/vimrc'
 let $MYGVIMRC  = g:vim_home . '/gvimrc'
 
 " STAGING ======================================================================
-execute 'source ' . $VIMRUNTIME . '/ftplugin/man.vim'
 
 " MAPPINGS =====================================================================
 " Base -------------------------------------------------------------------------
@@ -124,9 +123,7 @@ nnoremap Q <Nop>
 " Switch from Search to Replace super fast!
 " nmap <expr> M ':%s/' . @/ . '//g<LEFT><LEFT>'
 
-" PLUGINS ======================================================================
-
-" vim-plug ---------------------------------------------------------------------
+" PLUGIN MANAGEMENT ============================================================
 " Automatically install and run if not found
 if empty(glob(g:vim_home . '/autoload/plug.vim'))
   exec 'silent !curl -fLo ' . g:vim_home . '/autoload/plug.vim --create-dirs
@@ -138,75 +135,65 @@ endif
 
 call plug#begin()
 
-Plug '~/Projects/vim-barbaric'
-Plug '~/Projects/vim-fold-rspec'
+" WIP --------------------------------------------------------------------------
 Plug '~/Projects/vim-getting-things-down'
-Plug '~/Projects/vim-rspec'
 
-Plug       'junegunn/goyo.vim'
+" Colorschemes -----------------------------------------------------------------
 Plug        'morhetz/gruvbox'
-Plug       'junegunn/limelight.vim'
 Plug      'NLKNguyen/papercolor-theme'
-Plug    'AndrewRadev/splitjoin.vim'
 Plug    'altercation/vim-colors-solarized'
-Plug          'tpope/vim-commentary'
-Plug             'ap/vim-css-color'
-Plug    'vim-airline/vim-airline'
-Plug    'vim-airline/vim-airline-themes'
-Plug    'nathangrigg/vim-beancount'
-Plug          'tpope/vim-bundler'
-Plug       'justinmk/vim-dirvish'
-Plug          'tpope/vim-dispatch'
-Plug       'junegunn/vim-easy-align'
-" Plug           'rlue/vim-fold-rspec'
-Plug       'jamessan/vim-gnupg'
-" Plug           'rlue/vim-getting-things-down'
 Plug           'w0ng/vim-hybrid'
-Plug         'henrik/vim-indexed-search'
+
+" Dev Tools --------------------------------------------------------------------
+Plug    'AndrewRadev/splitjoin.vim'
+Plug          'tpope/vim-bundler'
+Plug          'tpope/vim-commentary'
+Plug          'tpope/vim-dispatch'
+Plug           'rlue/vim-fold-rspec'
 Plug       'pangloss/vim-javascript'
 Plug          'tpope/vim-liquid'
-Plug       'powerman/vim-plugin-AnsiEsc'
 Plug          'tpope/vim-rails'
-Plug          'tpope/vim-repeat'
-Plug          'tpope/vim-rsi'
-" Plug     'thoughtbot/vim-rspec'
-Plug          'tpope/vim-sensible'
-Plug          'tpope/vim-sleuth'
+Plug           'rlue/vim-rspec'
 Plug  'slim-template/vim-slim'
+Plug          'tpope/vim-sleuth'
+Plug          'posva/vim-vue'
+
+if (v:version >= 740) | Plug 'ludovicchabant/vim-gutentags' | endif
+if (v:version >= 800) | Plug 'w0rp/ale'                     | endif
+
+" Text Manipulation ------------------------------------------------------------
+Plug       'junegunn/vim-easy-align'
 Plug          'tpope/vim-speeddating'
 Plug          'tpope/vim-surround'
 Plug           'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
+
+" ftplugins --------------------------------------------------------------------
+Plug    'nathangrigg/vim-beancount'
+Plug       'jamessan/vim-gnupg'
+" Plug           'rlue/vim-getting-things-down'
+
+" UI ---------------------------------------------------------------------------
+Plug       'junegunn/goyo.vim'
+Plug       'junegunn/limelight.vim'
+Plug    'vim-airline/vim-airline'
+Plug    'vim-airline/vim-airline-themes'
+Plug           'rlue/vim-barbaric'
+Plug       'justinmk/vim-dirvish'
+Plug         'henrik/vim-indexed-search'
+Plug       'powerman/vim-plugin-AnsiEsc'
+Plug          'tpope/vim-repeat'
+Plug          'tpope/vim-rsi'
+Plug          'tpope/vim-sensible'
 Plug          'tpope/vim-unimpaired'
-Plug          'posva/vim-vue'
 
-" Plugins with version dependencies
-if v:version >= 800
-  Plug 'w0rp/ale'
-endif
-
-if v:version >= 740
-  " Gutentags issues a compatibilty warning on unsupported versions
-  Plug 'ludovicchabant/vim-gutentags'
-
-  " fzf.vim depends on a third-party binary
-  if executable('fzf') && !has('gui_running')
-    let s:fzf_dirs = [$HOME . '/.fzf']
-
-    if executable('brew')
-      call add(s:fzf_dirs, systemlist('brew --prefix')[0] . '/opt/fzf')
-    endif
-
-    for dir in s:fzf_dirs
-      if isdirectory(dir)
-        Plug dir | Plug 'junegunn/fzf.vim'
-        break
-      endif
-    endfor
-  endif
+if v:version >= 740 && executable('fzf') &&
+      \ (!has('gui_running') || has('terminal'))
+  Plug fnamemodify(resolve(exepath('fzf')), ':h:h') | Plug 'junegunn/fzf.vim'
 endif
 
 call plug#end()
 
+" PLUGIN CONFIGURATION =========================================================
 " ALE --------------------------------------------------------------------------
 if !empty(globpath(&runtimepath, '/plugin/ale.vim'))
   let g:ale_set_quickfix = 1
@@ -218,11 +205,11 @@ if !empty(globpath(&runtimepath, '/plugin/ale.vim'))
 endif
 
 " fzf.vim ----------------------------------------------------------------------
-if !empty(globpath(&runtimepath, '/plugin/fzf.vim')) && executable('fzf') && !has('gui_running')
-  nnoremap <Leader>ff :Files<CR>
-  nnoremap <Leader>fb :Buffers<CR>
-  nnoremap <Leader>fl :Lines<CR>
-  nnoremap <Leader>fh :Helptags<CR>
+if !empty(globpath(&runtimepath, '/plugin/fzf.vim'))
+  nnoremap <Leader>zf :Files<CR>
+  nnoremap <Leader>zb :Buffers<CR>
+  nnoremap <Leader>zl :Lines<CR>
+  nnoremap <Leader>zh :Helptags<CR>
 
   if executable('rg') && (exists(':Rg') != 2)
     command! -bang -nargs=* Rg
@@ -508,25 +495,10 @@ if has('persistent_undo')         " Store vimundo within .vim/
   if !isdirectory(&undodir)
     call mkdir(&undodir)
   else
-    " Remove from {dir} all files not modified in the last {n} days (default 30)
-    " (https://gist.github.com/mllg/5353184)
-    function! s:prune_old_files(dir, ...)
-      let l:days = a:0 ? a:1 : 30
-      let l:path = expand(a:dir)
-
-      if !isdirectory(l:path)
-        echohl WarningMsg | echo 'Invalid directory' | echohl None
-        return 0
-      endif
-
-      for l:file in split(glob(l:path . '/*'), "\n")
-        if localtime() > getftime(l:file) + 86400 * l:days && delete(l:file) != 0
-          echoerr 's:prune_old_files(): ' . l:file . ' could not be deleted'
-        endif
-      endfor
-    endfunction
-  
-    call s:prune_old_files(&undodir)
+    augroup pruneUndo
+      autocmd!
+      autocmd CursorHold,CursorHoldI * call pruneUndo#initialize(&undodir)
+    augroup END
   endif
 endif
 

@@ -2,7 +2,7 @@
 
 " General ----------------------------------------------------------------------
 set guioptions=                           " Disable GUI chrome 
-set lines=999 columns=85                  " Maximize window height
+set lines=999 columns=90                  " Maximize window height
 
 " Colors -----------------------------------------------------------------------
 if !empty(globpath(&rtp, 'colors/hybrid.vim'))
