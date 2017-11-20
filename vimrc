@@ -158,8 +158,8 @@ Plug  'slim-template/vim-slim'
 Plug          'tpope/vim-sleuth'
 Plug          'posva/vim-vue'
 
-if (v:version >= 740) | Plug 'ludovicchabant/vim-gutentags' | endif
-if (v:version >= 800) | Plug 'w0rp/ale'                     | endif
+if (v:version >= 740) && executable('ctags') | Plug 'ludovicchabant/vim-gutentags' | endif
+if (v:version >= 800) | Plug 'w0rp/ale' | endif
 
 " Text Manipulation ------------------------------------------------------------
 Plug       'junegunn/vim-easy-align'
