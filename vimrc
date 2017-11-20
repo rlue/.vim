@@ -637,12 +637,11 @@ if exists('+wildignore') | set wildignore+=*/tmp/*,*.zip,*.swp,*.so | endif
 " grep (repgrip/ag)
 if exists('+grepprg') && exists('+grepformat')
   if executable('rg')
-    let s:grepprg = 'rg'
+    let &grepprg = 'rg --vimgrep $*' 
   elseif executable('ag')
-    let s:grepprg = 'ag'
+    let &grepprg = 'ag --vimgrep $*' 
   endif
 
-  let &grepprg = s:grepprg . ' --vimgrep $*' 
   let &grepformat = '%f:%l:%c:%m'             
 endif
 
