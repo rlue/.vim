@@ -23,6 +23,10 @@ vnoremap . :normal .<CR>
 if has('clipboard')
   nnoremap <Leader>p "*p
   nnoremap <Leader>P "*P
+  nmap     <Leader>]p "*]p
+  nmap     <Leader>]P "*]P
+  nmap     <Leader>[p "*[p
+  nmap     <Leader>[P "*[P
   nnoremap <Leader>y "*y
   nnoremap <Leader>Y "*y$
   nnoremap <Leader>d "*d
@@ -50,6 +54,18 @@ for s:delimiter in [ '_', '-', '.', ':', ',', ';', '<bar>',
   execute 'xnoremap a' . s:delimiter . ' :<C-u>normal! F' . s:delimiter . 'vf' . s:delimiter . '<CR>'
   execute 'onoremap a' . s:delimiter . ' :normal va' . s:delimiter . '<CR>'
 endfor
+
+" Perform characterwise paste on linewise registers
+" per https://www.reddit.com/r/vim/comments/7egiyf/inverse_of_p_p/dq52ni0/
+function! ZeroPaste(p)
+  let l:original_reg = getreg(v:register)
+  let l:stripped_reg = substitute(l:original_reg, '\v^%(\n|\s)*(.{-})%(\n|\s)*$', '\1', '')
+  call setreg(v:register, l:stripped_reg, 'c')
+  exe 'normal "' . v:register . a:p
+  call setreg(v:register, l:original_reg)
+endfunction
+nnoremap <silent> zp :<c-u>call ZeroPaste('p')<cr>
+nnoremap <silent> zP :<c-u>call ZeroPaste('P')<cr>
 
 " Buffer Management ------------------------------------------------------------
 " Save
@@ -185,6 +201,8 @@ Plug          'tpope/vim-repeat'
 Plug          'tpope/vim-rsi'
 Plug          'tpope/vim-sensible'
 Plug          'tpope/vim-unimpaired'
+
+if has('unix') | Plug 'tpope/vim-eunuch' | endif
 
 if v:version >= 740 && executable('fzf') &&
       \ (!has('gui_running') || has('terminal'))
@@ -521,97 +539,98 @@ endif
 
 " File Manipulation ------------------------------------------------------------
 
-function! MoveFile(dest, bang)
-  let l:source = expand('%:p')
-  let l:target = fnamemodify(a:dest, ':p')
-  let l:target_dir = fnamemodify(l:target, ':h')
+" replaced by vim-eunuch?
+" function! MoveFile(dest, bang)
+"   let l:source = expand('%:p')
+"   let l:target = fnamemodify(a:dest, ':p')
+"   let l:target_dir = fnamemodify(l:target, ':h')
 
-  if l:source == l:target
-    return 0
-  " Destination directory does not exist
-  elseif !isdirectory(l:target_dir)
-    if (a:bang ==# '!')
-      call mkdir(l:target_dir, 'p')
-    else
-      echohl WarningMsg
-        echo l:target_dir . ': no such directory (add ! to create)'
-      echohl None
-      return 0
-    endif
-  " Overwrite existing file?
-  elseif bufexists(l:target)
-    if (a:bang ==# '!')
-      exec 'bwipe!' . bufnr(l:target)
-    else
-      echohl WarningMsg
-        echo 'File is loaded in another buffer (add ! to override)'
-      echohl None
-      return 0
-    endif
-  endif
+"   if l:source == l:target
+"     return 0
+"   " Destination directory does not exist
+"   elseif !isdirectory(l:target_dir)
+"     if (a:bang ==# '!')
+"       call mkdir(l:target_dir, 'p')
+"     else
+"       echohl WarningMsg
+"         echo l:target_dir . ': no such directory (add ! to create)'
+"       echohl None
+"       return 0
+"     endif
+"   " Overwrite existing file?
+"   elseif bufexists(l:target)
+"     if (a:bang ==# '!')
+"       exec 'bwipe!' . bufnr(l:target)
+"     else
+"       echohl WarningMsg
+"         echo 'File is loaded in another buffer (add ! to override)'
+"       echohl None
+"       return 0
+"     endif
+"   endif
 
-  execute 'saveas' . a:bang . ' ' . fnameescape(l:target) .
-        \ (isdirectory(l:target) ? expand('%:t') : '')
+"   execute 'saveas' . a:bang . ' ' . fnameescape(l:target) .
+"         \ (isdirectory(l:target) ? expand('%:t') : '')
 
-  if !isdirectory(l:target) &&
-        \ (fnamemodify(l:source, ':e') != fnamemodify(l:target, ':e'))
-    edit
-  endif
+"   if !isdirectory(l:target) &&
+"         \ (fnamemodify(l:source, ':e') != fnamemodify(l:target, ':e'))
+"     edit
+"   endif
 
-  call delete(l:source)
-  execute bufnr(l:source) . 'bwipe!'
+"   call delete(l:source)
+"   execute bufnr(l:source) . 'bwipe!'
 
-  return 1
-endfunction
+"   return 1
+" endfunction
 
-function! RmFile(target, bang)
-  let l:target = expand(a:target)
+" function! RmFile(target, bang)
+"   let l:target = expand(a:target)
 
-  " Target file does not exist or is not writable
-  if empty(glob(l:target))
-    echohl WarningMsg | echo l:target . ': no such file' | echohl None
-    return 0
-  elseif isdirectory(a:target)
-    if (a:bang ==# '!')
-      " close all related buffers
-      let l:listed_bufs = filter(range(1, bufnr('$')), 'buflisted(v:val)')
-      let l:target_bufs = filter(l:listed_bufs,
-            \ "expand('#' . v:val . ':p') =~# fnamemodify(l:target, ':p')")
+"   " Target file does not exist or is not writable
+"   if empty(glob(l:target))
+"     echohl WarningMsg | echo l:target . ': no such file' | echohl None
+"     return 0
+"   elseif isdirectory(a:target)
+"     if (a:bang ==# '!')
+"       " close all related buffers
+"       let l:listed_bufs = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+"       let l:target_bufs = filter(l:listed_bufs,
+"             \ "expand('#' . v:val . ':p') =~# fnamemodify(l:target, ':p')")
 
-      for l:buffer in l:target_bufs
-        execute 'bd!' . l:buffer
-      endfor
+"       for l:buffer in l:target_bufs
+"         execute 'bd!' . l:buffer
+"       endfor
 
-      call delete(a:target, 'rf')
-    else
-    echohl WarningMsg
-      echo l:target . ' is a directory (add ! to override)'
-    echohl None
-      return 0
-    end
-  elseif !filewritable(l:target)
-    echohl WarningMsg | echo l:target . ': read-only file' | echohl WarningMsg
-    return 0
-  else
-    " close buffer
-    let l:target_buf = 1 + index(map(range(1, bufnr('$')),
-                \                    "expand('#' . v:val . ':p')"),
-                \                fnamemodify(l:target, ':p'))
-    if buflisted(l:target_buf)
-      if bufnr('%') == l:target_buf
-        buffer #
-      endif
-      execute 'bd!' . l:target_buf
-    endif
+"       call delete(a:target, 'rf')
+"     else
+"     echohl WarningMsg
+"       echo l:target . ' is a directory (add ! to override)'
+"     echohl None
+"       return 0
+"     end
+"   elseif !filewritable(l:target)
+"     echohl WarningMsg | echo l:target . ': read-only file' | echohl WarningMsg
+"     return 0
+"   else
+"     " close buffer
+"     let l:target_buf = 1 + index(map(range(1, bufnr('$')),
+"                 \                    "expand('#' . v:val . ':p')"),
+"                 \                fnamemodify(l:target, ':p'))
+"     if buflisted(l:target_buf)
+"       if bufnr('%') == l:target_buf
+"         buffer #
+"       endif
+"       execute 'bd!' . l:target_buf
+"     endif
 
-    call delete(a:target)
-  endif
+"     call delete(a:target)
+"   endif
 
-  return 1
-endfunction
+"   return 1
+" endfunction
 
-command! -nargs=1 -complete=file -bar -bang Mv call MoveFile('<args>', '<bang>')
-command! -nargs=1 -complete=file -bar -bang Rm call RmFile('<args>', '<bang>')
+" command! -nargs=1 -complete=file -bar -bang Mv call MoveFile('<args>', '<bang>')
+" command! -nargs=1 -complete=file -bar -bang Rm call RmFile('<args>', '<bang>')
 
 " File Metadata ----------------------------------------------------------------
 
