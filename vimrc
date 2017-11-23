@@ -59,10 +59,11 @@ endfor
 " per https://www.reddit.com/r/vim/comments/7egiyf/inverse_of_p_p/dq52ni0/
 function! ZeroPaste(p)
   let l:original_reg = getreg(v:register)
-  let l:stripped_reg = substitute(l:original_reg, '\v^%(\n|\s)*(.{-})%(\n|\s)*$', '\1', '')
+  let l:original_reg_type = getregtype(v:register)
+  let l:stripped_reg = substitute(l:original_reg, '\v^%(\n|\s)*(.{-})%(\n|\s)*$', '\1 ', '')
   call setreg(v:register, l:stripped_reg, 'c')
   exe 'normal "' . v:register . a:p
-  call setreg(v:register, l:original_reg)
+  call setreg(v:register, l:original_reg, l:original_reg_type)
 endfunction
 nnoremap <silent> zp :<c-u>call ZeroPaste('p')<cr>
 nnoremap <silent> zP :<c-u>call ZeroPaste('P')<cr>
@@ -178,6 +179,7 @@ if (v:version >= 740) && executable('ctags') | Plug 'ludovicchabant/vim-gutentag
 if (v:version >= 800) | Plug 'w0rp/ale' | endif
 
 " Text Manipulation ------------------------------------------------------------
+Plug    'AndrewRadev/sideways.vim'
 Plug       'junegunn/vim-easy-align'
 Plug          'tpope/vim-speeddating'
 Plug          'tpope/vim-surround'
@@ -236,7 +238,7 @@ if !empty(globpath(&runtimepath, '/plugin/fzf.vim'))
       \   <bang>0 ? fzf#vim#with_preview('up:60%')
       \           : fzf#vim#with_preview('right:50%', '?'),
       \   <bang>0)
-    nnoremap <Leader>fg :Rg 
+    nnoremap <Leader>zg :Rg<CR>
   endif
 endif
 
@@ -264,6 +266,13 @@ endif
 " manpager.vim -----------------------------------------------------------------
 if filereadable($VIMRUNTIME . '/ftplugin/man.vim')
   let g:ft_man_folding_enable = 1
+endif
+
+" sideways.vim -----------------------------------------------------------------
+if !empty(globpath(&runtimepath, '/plugin/sideways.vim'))
+  " t as in Transpose
+  nnoremap <Leader>t :SidewaysLeft<CR>
+  nnoremap <Leader>T :SidewaysRight<CR>
 endif
 
 " vim-airline ------------------------------------------------------------------
