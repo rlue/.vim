@@ -94,9 +94,9 @@ nnoremap <C-w><C-l> <C-w>l<C-w>_<C-w><Bar>
 if isdirectory($HOME . '/Documents/Notes')
   nnoremap <Leader>en :e ~/Documents/Notes/**/
 endif
-" if isdirectory($HOME . '/Projects/rlue.github.io')
-"   nnoremap <Leader>eb :e ~/Projects/rlue.github.io/_drafts/**/
-" endif
+if filereadable($HOME . '/Documents/Notes/Accounting/Ledger.bean')
+  nnoremap <Leader>el :e ~/Documents/Notes/Accounting/Ledger.bean<CR>
+endif
 
 " Navigation -------------------------------------------------------------------
 
@@ -283,9 +283,9 @@ if !empty(globpath(&runtimepath, '/plugin/airline.vim'))
   let g:airline#extensions#tabline#buffer_nr_show = 1
 endif
 
-" vim-barbarian ----------------------------------------------------------------
-if !empty(globpath(&runtimepath, '/plugin/barbarian.vim'))
-  let g:barbarian_default = 0
+" vim-barbaric -----------------------------------------------------------------
+if !empty(globpath(&runtimepath, '/plugin/barbaric.vim'))
+  let g:barbaric_default = 0
 endif
 
 " vim-dirvish ------------------------------------------------------------------
