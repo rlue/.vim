@@ -373,7 +373,7 @@ endif
 if !empty(globpath(&runtimepath, '/plugin/textobj/quote.vim'))
   augroup vimrc_textobj_quote
     autocmd!
-    autocmd FileType markdown,text call textobj#quote#init()
+    autocmd FileType markdown,text,mail call textobj#quote#init()
   augroup END
 endif
 
@@ -465,7 +465,8 @@ endfunction
 
 " Hints ------------------------------------------------------------------------
 " Show relative line numbers in left sidebar
-if exists('+number')      | set number      | endif
+if exists('+number')         | set number         | endif
+if exists('+relativenumber') | set relativenumber | endif
 
 " Windows ----------------------------------------------------------------------
 " Open new windows below or to the right of the current buffer
