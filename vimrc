@@ -466,7 +466,7 @@ endfunction
 " Hints ------------------------------------------------------------------------
 " Show relative line numbers in left sidebar
 if exists('+number')         | set number         | endif
-if exists('+relativenumber') | set relativenumber | endif
+" if exists('+relativenumber') | set relativenumber | endif
 
 " Windows ----------------------------------------------------------------------
 " Open new windows below or to the right of the current buffer
