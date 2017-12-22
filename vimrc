@@ -77,6 +77,9 @@ nnoremap <Leader>W :wa<CR>
 nnoremap <Leader>b :ls<CR>:b
 nnoremap <Leader>B :browse oldfiles<CR>
 
+" vimdiff
+nnoremap du :diffupdate<CR>
+
 " UI & Window Management -------------------------------------------------------
 " Easy window switching
 if exists('+winminheight') | set winminheight=0 | endif
@@ -167,10 +170,11 @@ Plug          'tpope/vim-bundler'
 Plug          'tpope/vim-commentary'
 Plug          'tpope/vim-dispatch'
 Plug           'rlue/vim-fold-rspec'
+Plug          'tpope/vim-fugitive'
 Plug       'pangloss/vim-javascript'
 Plug          'tpope/vim-liquid'
 Plug          'tpope/vim-rails'
-Plug           'rlue/vim-rspec'
+Plug           'rlue/vim-rspec', { 'branch': 'feature/visual_selection' }
 Plug  'slim-template/vim-slim'
 Plug          'tpope/vim-sleuth'
 Plug          'posva/vim-vue'
