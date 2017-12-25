@@ -60,7 +60,8 @@ endfor
 function! ZeroPaste(p)
   let l:original_reg = getreg(v:register)
   let l:original_reg_type = getregtype(v:register)
-  let l:stripped_reg = substitute(l:original_reg, '\v^%(\n|\s)*(.{-})%(\n|\s)*$', '\1 ', '')
+  let l:stripped_reg = substitute(l:original_reg, '\v^%(\n|\s)*(.{-})%(\n|\s)*$', '\1', '')
+  let l:stripped_reg = (a:p ==# 'p') ? (' ' . l:stripped_reg) : (l:stripped_reg . ' ')
   call setreg(v:register, l:stripped_reg, 'c')
   exe 'normal "' . v:register . a:p
   call setreg(v:register, l:original_reg, l:original_reg_type)
@@ -181,6 +182,7 @@ Plug          'posva/vim-vue'
 
 if (v:version >= 740) && executable('ctags') | Plug 'ludovicchabant/vim-gutentags' | endif
 if (v:version >= 800) | Plug 'w0rp/ale' | endif
+" if exists('*pyeval') | Plug       'baverman/vial-http' | Plug 'baverman/vial' | endif
 
 " Text Manipulation ------------------------------------------------------------
 Plug    'AndrewRadev/sideways.vim'
