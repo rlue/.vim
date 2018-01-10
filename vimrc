@@ -4,6 +4,7 @@ let $MYVIMRC   = g:vim_home . '/vimrc'
 let $MYGVIMRC  = g:vim_home . '/gvimrc'
 
 " STAGING ======================================================================
+set lazyredraw " faster macros, per https://hillelwayne.com/post/vim-macro-trickz/
 
 " MAPPINGS =====================================================================
 " Base -------------------------------------------------------------------------
@@ -168,6 +169,7 @@ Plug           'w0ng/vim-hybrid'
 " Dev Tools --------------------------------------------------------------------
 Plug    'AndrewRadev/splitjoin.vim'
 Plug          'tpope/vim-bundler'
+Plug         'kchmck/vim-coffee-script'
 Plug          'tpope/vim-commentary'
 Plug          'tpope/vim-dispatch'
 Plug           'rlue/vim-fold-rspec'
@@ -182,7 +184,7 @@ Plug          'posva/vim-vue'
 
 if (v:version >= 740) && executable('ctags') | Plug 'ludovicchabant/vim-gutentags' | endif
 if (v:version >= 800) | Plug 'w0rp/ale' | endif
-" if exists('*pyeval') | Plug       'baverman/vial-http' | Plug 'baverman/vial' | endif
+if exists('*pyeval') | Plug       'baverman/vial-http' | Plug 'baverman/vial' | endif
 
 " Text Manipulation ------------------------------------------------------------
 Plug    'AndrewRadev/sideways.vim'
