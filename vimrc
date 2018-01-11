@@ -158,7 +158,9 @@ endif
 call plug#begin()
 
 " WIP --------------------------------------------------------------------------
-Plug '~/Projects/vim-getting-things-down'
+if isdirectory($HOME . '/Projects/vim-getting-things-down')
+  Plug '~/Projects/vim-getting-things-down'
+endif
 
 " Colorschemes -----------------------------------------------------------------
 Plug        'morhetz/gruvbox'
