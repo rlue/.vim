@@ -256,18 +256,17 @@ endif
 if !empty(globpath(&runtimepath, '/plugin/goyo.vim'))
   augroup vimrc_goyo
     autocmd!
-    autocmd FileType markdown nnoremap <buffer> <Leader>f :Goyo<CR>
+    autocmd FileType markdown nnoremap <buffer> <LocalLeader>f :Goyo<CR>
   augroup END
 endif
 
-" limelight --------------------------------------------------------------------
+" limelight -------------------------------------- ------------------------------
 if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
-  let g:limelight_default_coefficient = 0.7   " Set deeper default shading
-
-  if exists(':Goyo')
+  let g:limelight_default_coefficient = 0.7             " Set default shading
+  if !empty(globpath(&runtimepath, '/plugin/goyo.vim')) " Tie Limelight to Goyo
     augroup vimrc_limelight
       autocmd!
-      autocmd User GoyoEnter Limelight           " Tie Limelight to Goyo
+      autocmd User GoyoEnter Limelight
       autocmd User GoyoLeave Limelight!
     augroup END
   endif
@@ -710,6 +709,9 @@ if exists(':colorscheme') == 2
     if !empty(globpath(&runtimepath, '/colors/hybrid.vim'))
       let g:hybrid_custom_term_colors = 1
       colorscheme hybrid
+      if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
+        let g:limelight_conceal_ctermfg = 'black'
+      endif
     endif
   elseif s:sessionLaunchedOn('porphyrion')
     colorscheme default
