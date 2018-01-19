@@ -62,7 +62,7 @@ function! ZeroPaste(p)
   let l:original_reg = getreg(v:register)
   let l:original_reg_type = getregtype(v:register)
   let l:stripped_reg = substitute(l:original_reg, '\v^%(\n|\s)*(.{-})%(\n|\s)*$', '\1', '')
-  let l:stripped_reg = (a:p ==# 'p') ? (' ' . l:stripped_reg) : (l:stripped_reg . ' ')
+  let l:stripped_reg = (a:p ==# 'p' && getcurpos()[2] == strlen(getline('.'))) ? (' ' . l:stripped_reg) : (l:stripped_reg . ' ')
   call setreg(v:register, l:stripped_reg, 'c')
   exe 'normal "' . v:register . a:p
   call setreg(v:register, l:original_reg, l:original_reg_type)
