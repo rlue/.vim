@@ -667,7 +667,7 @@ endif
 cabbr <expr> %% fnameescape(expand('%:p:h'))        " shortcut: directory of current buffer
 if exists('+ignorecase') | set ignorecase | endif   " Search with...
 if exists('+smartcase')  | set smartcase  | endif   " ...smart case recognition
-if exists('+wildignore') | set wildignore+=*/tmp/*,*.zip,*.swp,*.so | endif
+if exists('+wildignore') | set wildignore+=*.zip,*.swp,*.so | endif
 
 
 " External Tools ---------------------------------------------------------------
