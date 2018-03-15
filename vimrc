@@ -162,6 +162,9 @@ if isdirectory($HOME . '/Projects/vim-getting-things-down')
   Plug '~/Projects/vim-getting-things-down'
 endif
 
+if isdirectory($HOME . '/Projects/vim-daylog')
+  Plug '~/Projects/vim-daylog'
+endif
 " Colorschemes -----------------------------------------------------------------
 Plug        'morhetz/gruvbox'
 Plug      'NLKNguyen/papercolor-theme'
@@ -169,6 +172,7 @@ Plug    'altercation/vim-colors-solarized'
 Plug           'w0ng/vim-hybrid'
 
 " Dev Tools --------------------------------------------------------------------
+Plug       'junegunn/gv.vim'
 Plug    'AndrewRadev/splitjoin.vim'
 Plug          'tpope/vim-bundler'
 Plug         'kchmck/vim-coffee-script'
@@ -179,6 +183,7 @@ Plug          'tpope/vim-fugitive'
 Plug       'pangloss/vim-javascript'
 Plug          'tpope/vim-liquid'
 Plug          'tpope/vim-rails'
+Plug          'tpope/vim-rhubarb'
 Plug           'rlue/vim-rspec', { 'branch': 'feature/visual_selection' }
 Plug  'slim-template/vim-slim'
 Plug          'tpope/vim-sleuth'
@@ -272,6 +277,10 @@ if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
   endif
 endif
 
+" gv.vim -----------------------------------------------------------------------
+if !empty(globpath(&runtimepath, '/plugin/gv.vim'))
+  nnoremap <Leader>gv :GV<CR>
+endif
 " manpager.vim -----------------------------------------------------------------
 if filereadable($VIMRUNTIME . '/ftplugin/man.vim')
   let g:ft_man_folding_enable = 1
@@ -295,6 +304,15 @@ endif
 " vim-barbaric -----------------------------------------------------------------
 if !empty(globpath(&runtimepath, '/plugin/barbaric.vim'))
   let g:barbaric_default = 0
+endif
+
+" vim-daylog -------------------------------------------------------------------
+if !empty(globpath(&runtimepath, '/ftplugin/daylog.vim'))
+  nnoremap <Leader>ed :call daylog#enter_log()<CR>
+
+  if isdirectory($HOME . '/Documents/Notes/Daylogs')
+    let g:daylog_home = $HOME . '/Documents/Notes/Daylogs'
+  endif
 endif
 
 " vim-dirvish ------------------------------------------------------------------
