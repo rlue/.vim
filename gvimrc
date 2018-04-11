@@ -16,7 +16,9 @@ endif
 " endif
 
 " Fonts ------------------------------------------------------------------------
-if hostname() =~# 'sardanapalus'
+if hostname() =~# 'herringbone'
+  set guifont=PragmataPro\ 14
+elseif hostname() =~# 'sardanapalus'
   set guifont=PragmataPro:h16.5
 elseif hostname() =~# 'liberte'
   set guifont=Source\ Code\ Pro:h17

@@ -22,22 +22,22 @@ vnoremap . :normal .<CR>
 
 " Easy yank-put from system clipboard
 if has('clipboard')
-  nnoremap <Leader>p "*p
-  nnoremap <Leader>P "*P
-  nmap     <Leader>]p "*]p
-  nmap     <Leader>]P "*]P
-  nmap     <Leader>[p "*[p
-  nmap     <Leader>[P "*[P
-  nnoremap <Leader>y "*y
-  nnoremap <Leader>Y "*y$
-  nnoremap <Leader>d "*d
-  nnoremap <Leader>D "*D
-  vnoremap <Leader>p "*p
-  vnoremap <Leader>P "*P
-  vnoremap <Leader>y "*y
-  vnoremap <Leader>Y "*y$
-  vnoremap <Leader>d "*d
-  vnoremap <Leader>D "*D
+  nnoremap <Leader>p "+p
+  nnoremap <Leader>P "+P
+  nmap     <Leader>]p "+]p
+  nmap     <Leader>]P "+]P
+  nmap     <Leader>[p "+[p
+  nmap     <Leader>[P "+[P
+  nnoremap <Leader>y "+y
+  nnoremap <Leader>Y "+y$
+  nnoremap <Leader>d "+d
+  nnoremap <Leader>D "+D
+  vnoremap <Leader>p "+p
+  vnoremap <Leader>P "+P
+  vnoremap <Leader>y "+y
+  vnoremap <Leader>Y "+y$
+  vnoremap <Leader>d "+d
+  vnoremap <Leader>D "+D
 endif
 
 " Easy whitespace
@@ -201,6 +201,7 @@ Plug          'tpope/vim-surround'
 Plug           'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
 
 " ftplugins --------------------------------------------------------------------
+Plug           'aklt/plantuml-syntax'
 Plug    'nathangrigg/vim-beancount'
 Plug       'jamessan/vim-gnupg'
 " Plug           'rlue/vim-getting-things-down'
@@ -507,32 +508,6 @@ if exists('+linebreak')   | set linebreak   | endif
 " On long, wrapped lines, indent whole paragraph (instead of just first line)
 if exists('+breakindent') | set breakindent | endif
 
-" iTerm ------------------------------------------------------------------------
-if $TERM_PROGRAM =~# 'iTerm'
-  " Dynamic cursor type (INSERT: `|`, NORMAL: `█`, REPLACE: `_`)
-  " per https://vi.stackexchange.com/questions/3379/cursor-shape-under-vim-tmux
-  " and http://vim.wikia.com/wiki/Change_cursor_shape_in_different_modes
-  " if has('cursorshape')
-  "   function! s:cursor_code(val)
-  "     let l:base        = ']50;CursorShape=' . a:val . ''
-  "     let l:prefix = exists('$TMUX') ? 'Ptmux;' : ''
-  "     let l:suffix = exists('$TMUX') ? '\' : ''
-  "     return l:prefix . l:base . l:suffix
-  "   endfunction
-
-  "   let &t_SI = s:cursor_code(1)
-  "   let &t_SR = s:cursor_code(2)
-  "   let &t_EI = s:cursor_code(0)
-  " endif
-
-  " Enable 256 color mode
-  if exists('+t_Co') | set t_Co=256 | endif
-
-  " Italicize comments
-  highlight Comment cterm=italic
-  highlight Normal ctermbg=none
-endif
-
 " WORKFLOW =====================================================================
 " This section concerns vim's basic editing environment: 
 " how it loads buffers, loads new files, handles file metadata, etc.
@@ -719,21 +694,20 @@ function! s:sessionLaunchedOn(machine)
   endif
 endfunction
 
-" Terminal colors --------------------------------------------------------------
-if exists('+background')     | set background=dark | endif
+" Colorscheme ------------------------------------------------------------------
+if exists('+background') | set background=dark | endif
 
-if exists(':colorscheme') == 2
-  if s:sessionLaunchedOn('sardanapalus') || s:sessionLaunchedOn('liberte')
-    if !empty(globpath(&runtimepath, '/colors/hybrid.vim'))
-      let g:hybrid_custom_term_colors = 1
-      colorscheme hybrid
-      if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
-        let g:limelight_conceal_ctermfg = 'black'
-      endif
-    endif
-  elseif s:sessionLaunchedOn('porphyrion')
-    colorscheme default
+if exists(':colorscheme') == 2 && !empty(globpath(&runtimepath, '/colors/hybrid.vim'))
+  colorscheme hybrid
+  highlight Normal ctermbg=none
+
+  if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
+    let g:limelight_conceal_ctermfg = 'darkgray'
   endif
+endif
+
+call system('infocmp | grep [sr]itm') | if !v:shell_error
+  highlight Comment cterm=italic
 endif
 
 " Default Working Directory ----------------------------------------------------
