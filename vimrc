@@ -178,6 +178,7 @@ Plug          'tpope/vim-bundler'
 Plug         'kchmck/vim-coffee-script'
 Plug          'tpope/vim-commentary'
 Plug          'tpope/vim-dispatch'
+Plug    'AndrewRadev/vim-eco'
 Plug           'rlue/vim-fold-rspec'
 Plug          'tpope/vim-fugitive'
 Plug       'pangloss/vim-javascript'
@@ -188,10 +189,11 @@ Plug           'rlue/vim-rspec', { 'branch': 'feature/visual_selection' }
 Plug  'slim-template/vim-slim'
 Plug          'tpope/vim-sleuth'
 Plug          'posva/vim-vue'
+Plug         'lervag/vimtex'
 
 if (v:version >= 740) && executable('ctags') | Plug 'ludovicchabant/vim-gutentags' | endif
 if (v:version >= 800) | Plug 'w0rp/ale' | endif
-if exists('*pyeval') | Plug       'baverman/vial-http' | Plug 'baverman/vial' | endif
+if exists('*pyeval') | Plug 'baverman/vial-http' | Plug 'baverman/vial' | endif
 
 " Text Manipulation ------------------------------------------------------------
 Plug    'AndrewRadev/sideways.vim'
@@ -418,8 +420,9 @@ if exists('+hlsearch')       | set hlsearch        | endif
 
 " Shade bg after column 80 (for visual cue of suggested max line width)
 if exists('+colorcolumn') 
-  let s:colorcolumn_fts = ['sh', 'bash', 'vim', 'css', 'scss', 'javascript',
-        \                  'ruby', 'eruby', 'python']
+  let s:colorcolumn_fts = ['sh', 'bash', 'vim',
+        \                  'javascript', 'coffee',
+        \                  'ruby', 'python']
 
   augroup vimrc_colorcolumn
     autocmd!
