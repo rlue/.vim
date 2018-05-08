@@ -76,7 +76,7 @@ nnoremap <Leader>w :update<CR>
 nnoremap <Leader>W :wa<CR>
 
 " Switch
-nnoremap <Leader>b :ls<CR>:b
+nnoremap <Leader>b :ls<CR>:silent! b
 nnoremap <Leader>B :browse oldfiles<CR>
 
 " vimdiff
