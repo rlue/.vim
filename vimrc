@@ -649,6 +649,8 @@ endif
 
 " File Metadata ----------------------------------------------------------------
 
+if exists('+modeline') | set modeline | endif
+
 if exists('+fileformats') | set fileformats=unix,dos,mac | endif
 
 if exists('+filetype') | filetype plugin indent on | endif
