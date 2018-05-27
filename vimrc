@@ -146,13 +146,10 @@ nnoremap Q <Nop>
 " nmap <expr> M ':%s/' . @/ . '//g<LEFT><LEFT>'
 
 " PLUGIN MANAGEMENT ============================================================
-" Automatically install and run if not found
+" One-time setup: Install vim-plug ---------------------------------------------
 if empty(glob(g:vim_home . '/autoload/plug.vim'))
   exec 'silent !curl -fLo ' . g:vim_home . '/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  augroup vimrc_vim_plug
-    autocmd! | autocmd VimEnter * execute 'PlugInstall | source $MYVIMRC'
-  augroup END
 endif
 
 call plug#begin()
@@ -196,6 +193,7 @@ if (v:version >= 800) | Plug 'w0rp/ale' | endif
 if exists('*pyeval') | Plug 'baverman/vial-http' | Plug 'baverman/vial' | endif
 
 " Text Manipulation ------------------------------------------------------------
+Plug         'mbbill/fencview'
 Plug    'AndrewRadev/sideways.vim'
 Plug       'junegunn/vim-easy-align'
 Plug          'tpope/vim-speeddating'
@@ -230,6 +228,9 @@ if v:version >= 740 && executable('fzf') &&
 endif
 
 call plug#end()
+
+" One-time setup: Install plugins ----------------------------------------------
+if empty(glob(g:vim_home . '/plugged')) | PlugInstall | endif
 
 " PLUGIN CONFIGURATION =========================================================
 " ALE --------------------------------------------------------------------------
