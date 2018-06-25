@@ -432,6 +432,17 @@ if exists('+colorcolumn')
   augroup END
 endif
 
+" Easy colorscheme switching
+if exists(':colorscheme') == 2
+  if !empty(globpath(&runtimepath, '/colors/hybrid.vim'))
+    nnoremap <Leader>ch :set background=dark <Bar> colorscheme hybrid <Bar> highlight Normal ctermbg=none<CR>
+  endif
+
+  if !empty(globpath(&runtimepath, '/colors/PaperColor.vim'))
+    nnoremap <Leader>cp :set background=light <Bar> colorscheme PaperColor<CR>
+  endif
+endif
+
 " Folding ----------------------------------------------------------------------
 set foldlevel=2
 
