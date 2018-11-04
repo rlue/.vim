@@ -5,23 +5,17 @@ set guioptions=                           " Disable GUI chrome
 set lines=999 columns=90                  " Maximize window height
 
 " Colors -----------------------------------------------------------------------
-if !empty(globpath(&rtp, 'colors/hybrid.vim'))
-  let g:hybrid_reduced_contrast = 1
-  colorscheme hybrid
+if !empty(globpath(&rtp, 'colors/seoul256.vim'))
+  colorscheme seoul256
   set background=dark
+  AirlineTheme lucius | AirlineRefresh
 endif
-" if !empty(globpath(&rtp, 'colors/papercolor.vim'))
-"   colorscheme papercolor
-"   set bg=light
-" endif
 
 " Fonts ------------------------------------------------------------------------
 if hostname() =~# 'herringbone'
-  set guifont=PragmataPro\ 14
-elseif hostname() =~# 'sardanapalus'
-  set guifont=PragmataPro:h16.5
-elseif hostname() =~# 'liberte'
-  set guifont=Source\ Code\ Pro:h17
+  set guifont=Source\ Code\ Pro\ 14
+elseif hostname() =~# 'shibori'
+  set guifont=Source\ Code\ Pro\ 14
 else
   set guifont=Source\ Code\ Pro\ Light:h18
 endif
@@ -30,13 +24,6 @@ highlight Comment gui=italic
 
 " On Windows -------------------------------------------------------------------
 if has('win32')
-  " Fix garbled graphical menu text on Chinese (TW) Windows systems
-  " if $COMPUTERNAME == "WEI-PC"
-  "   so $VIMRUNTIME/delmenu.vim
-  "   so $VIMRUNTIME/menu.vim
-  "   language messages zh_TW.utf-8
-  " endif
-
   " Enable full-screen (https://github.com/derekmcloughlin/gvimfullscreen_win32)
   if !empty(globpath(&runtimepath, 'gvimfullscreen.dll'))
     map <F11> <Esc>:call libcallnr('gvimfullscreen.dll', 'ToggleFullScreen', 0)<CR>

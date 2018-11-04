@@ -4,7 +4,6 @@ let $MYVIMRC   = g:vim_home . '/vimrc'
 let $MYGVIMRC  = g:vim_home . '/gvimrc'
 
 " STAGING ======================================================================
-set lazyredraw " faster macros, per https://hillelwayne.com/post/vim-macro-trickz/
 
 " MAPPINGS =====================================================================
 " Base -------------------------------------------------------------------------
@@ -67,8 +66,10 @@ function! ZeroPaste(p)
   exe 'normal "' . v:register . a:p
   call setreg(v:register, l:original_reg, l:original_reg_type)
 endfunction
-nnoremap <silent> zp :<c-u>call ZeroPaste('p')<cr>
-nnoremap <silent> zP :<c-u>call ZeroPaste('P')<cr>
+nnoremap <silent> zp :call ZeroPaste('p')<CR>
+nnoremap <silent> zP :call ZeroPaste('P')<CR>
+vnoremap <silent> zp :<C-u>call ZeroPaste('p')<CR>
+vnoremap <silent> zP :<C-u>call ZeroPaste('P')<CR>
 
 " Buffer Management ------------------------------------------------------------
 " Save
@@ -162,9 +163,13 @@ endif
 if isdirectory($HOME . '/Projects/vim-daylog')
   Plug '~/Projects/vim-daylog'
 endif
+
 " Colorschemes -----------------------------------------------------------------
 Plug        'morhetz/gruvbox'
+Plug     'raphamorim/lucario'
 Plug      'NLKNguyen/papercolor-theme'
+Plug          'KKPMW/sacredforest-vim'
+Plug       'junegunn/seoul256.vim'
 Plug    'altercation/vim-colors-solarized'
 Plug           'w0ng/vim-hybrid'
 
@@ -183,6 +188,7 @@ Plug          'tpope/vim-liquid'
 Plug          'tpope/vim-rails'
 Plug          'tpope/vim-rhubarb'
 Plug           'rlue/vim-rspec', { 'branch': 'feature/visual_selection' }
+Plug          'mhinz/vim-signify'
 Plug  'slim-template/vim-slim'
 Plug          'tpope/vim-sleuth'
 Plug          'posva/vim-vue'
@@ -211,7 +217,6 @@ Plug       'junegunn/goyo.vim'
 Plug       'junegunn/limelight.vim'
 Plug    'vim-airline/vim-airline'
 Plug    'vim-airline/vim-airline-themes'
-Plug           'rlue/vim-barbaric'
 Plug       'justinmk/vim-dirvish'
 Plug         'henrik/vim-indexed-search'
 Plug       'powerman/vim-plugin-AnsiEsc'
@@ -219,6 +224,9 @@ Plug          'tpope/vim-repeat'
 Plug          'tpope/vim-rsi'
 Plug          'tpope/vim-sensible'
 Plug          'tpope/vim-unimpaired'
+
+" Mail -------------------------------------------------------------------------
+Plug        'felipec/notmuch-vim'
 
 if has('unix') | Plug 'tpope/vim-eunuch' | endif
 
@@ -285,6 +293,7 @@ endif
 if !empty(globpath(&runtimepath, '/plugin/gv.vim'))
   nnoremap <Leader>gv :GV<CR>
 endif
+
 " manpager.vim -----------------------------------------------------------------
 if filereadable($VIMRUNTIME . '/ftplugin/man.vim')
   let g:ft_man_folding_enable = 1
@@ -303,11 +312,6 @@ if !empty(globpath(&runtimepath, '/plugin/airline.vim'))
   let g:airline#extensions#whitespace#enabled     = 0
   let g:airline#extensions#tabline#enabled        = 1
   let g:airline#extensions#tabline#buffer_nr_show = 1
-endif
-
-" vim-barbaric -----------------------------------------------------------------
-if !empty(globpath(&runtimepath, '/plugin/barbaric.vim'))
-  let g:barbaric_default = 0
 endif
 
 " vim-daylog -------------------------------------------------------------------
@@ -398,6 +402,11 @@ if !empty(globpath(&runtimepath, '/plugin/rspec.vim'))
     nnoremap <buffer> <LocalLeader>sr :call RunLastSpec()<CR>
     nnoremap <buffer> <LocalLeader>sa :call RunAllSpecs()<CR>
   endfunction
+endif
+
+" vim-signify ------------------------------------------------------------------
+if !empty(globpath(&runtimepath, '/plugin/signify.vim'))
+  let g:signify_vcs_list = [ 'git' ]
 endif
 
 " vim-textobj-quote ------------------------------------------------------------
@@ -556,6 +565,7 @@ if has('crypt-blowfish2') | set cryptmethod=blowfish2 | endif
 if exists('+nobackup')   | set nobackup       | endif " Disable auto-backup when overwriting files
 if exists('+hidden')     | set hidden         | endif " Keep buffers alive when abandoned
 if exists('+backupcopy') | set backupcopy=yes | endif " Force backups to be copied from original, not renamed
+
 " Store all swap files together
 if exists('+directory')
   if !isdirectory(g:vim_home . '/swap')
@@ -564,113 +574,12 @@ if exists('+directory')
   let &directory = g:vim_home . '/swap'
 endif
 
-" File Manipulation ------------------------------------------------------------
-
-" replaced by vim-eunuch?
-" function! MoveFile(dest, bang)
-"   let l:source = expand('%:p')
-"   let l:target = fnamemodify(a:dest, ':p')
-"   let l:target_dir = fnamemodify(l:target, ':h')
-
-"   if l:source == l:target
-"     return 0
-"   " Destination directory does not exist
-"   elseif !isdirectory(l:target_dir)
-"     if (a:bang ==# '!')
-"       call mkdir(l:target_dir, 'p')
-"     else
-"       echohl WarningMsg
-"         echo l:target_dir . ': no such directory (add ! to create)'
-"       echohl None
-"       return 0
-"     endif
-"   " Overwrite existing file?
-"   elseif bufexists(l:target)
-"     if (a:bang ==# '!')
-"       exec 'bwipe!' . bufnr(l:target)
-"     else
-"       echohl WarningMsg
-"         echo 'File is loaded in another buffer (add ! to override)'
-"       echohl None
-"       return 0
-"     endif
-"   endif
-
-"   execute 'saveas' . a:bang . ' ' . fnameescape(l:target) .
-"         \ (isdirectory(l:target) ? expand('%:t') : '')
-
-"   if !isdirectory(l:target) &&
-"         \ (fnamemodify(l:source, ':e') != fnamemodify(l:target, ':e'))
-"     edit
-"   endif
-
-"   call delete(l:source)
-"   execute bufnr(l:source) . 'bwipe!'
-
-"   return 1
-" endfunction
-
-" function! RmFile(target, bang)
-"   let l:target = expand(a:target)
-
-"   " Target file does not exist or is not writable
-"   if empty(glob(l:target))
-"     echohl WarningMsg | echo l:target . ': no such file' | echohl None
-"     return 0
-"   elseif isdirectory(a:target)
-"     if (a:bang ==# '!')
-"       " close all related buffers
-"       let l:listed_bufs = filter(range(1, bufnr('$')), 'buflisted(v:val)')
-"       let l:target_bufs = filter(l:listed_bufs,
-"             \ "expand('#' . v:val . ':p') =~# fnamemodify(l:target, ':p')")
-
-"       for l:buffer in l:target_bufs
-"         execute 'bd!' . l:buffer
-"       endfor
-
-"       call delete(a:target, 'rf')
-"     else
-"     echohl WarningMsg
-"       echo l:target . ' is a directory (add ! to override)'
-"     echohl None
-"       return 0
-"     end
-"   elseif !filewritable(l:target)
-"     echohl WarningMsg | echo l:target . ': read-only file' | echohl WarningMsg
-"     return 0
-"   else
-"     " close buffer
-"     let l:target_buf = 1 + index(map(range(1, bufnr('$')),
-"                 \                    "expand('#' . v:val . ':p')"),
-"                 \                fnamemodify(l:target, ':p'))
-"     if buflisted(l:target_buf)
-"       if bufnr('%') == l:target_buf
-"         buffer #
-"       endif
-"       execute 'bd!' . l:target_buf
-"     endif
-
-"     call delete(a:target)
-"   endif
-
-"   return 1
-" endfunction
-
-" command! -nargs=1 -complete=file -bar -bang Mv call MoveFile('<args>', '<bang>')
-" command! -nargs=1 -complete=file -bar -bang Rm call RmFile('<args>', '<bang>')
-
 " File Metadata ----------------------------------------------------------------
 
 if exists('+modeline') | set modeline | endif
-
 if exists('+fileformats') | set fileformats=unix,dos,mac | endif
-
 if exists('+filetype') | filetype plugin indent on | endif
-
-if exists('+encoding')
-  set encoding=utf-8
-  scriptencoding utf-8
-endif
+if exists('+encoding') | set encoding=utf-8 | scriptencoding utf-8 | endif
 
 " Command Line Options ---------------------------------------------------------
 
@@ -678,7 +587,6 @@ cabbr <expr> %% fnameescape(expand('%:p:h'))        " shortcut: directory of cur
 if exists('+ignorecase') | set ignorecase | endif   " Search with...
 if exists('+smartcase')  | set smartcase  | endif   " ...smart case recognition
 if exists('+wildignore') | set wildignore+=*.zip,*.swp,*.so | endif
-
 
 " External Tools ---------------------------------------------------------------
 
@@ -727,17 +635,6 @@ call system('infocmp | grep [sr]itm') | if !v:shell_error
   highlight Comment cterm=italic
 endif
 
-" Default Working Directory ----------------------------------------------------
-" if has('win32')
-"   if $COMPUTERNAME == "ODALISQUE"
-"     :cd $HOMEPATH/Dropbox
-"   endif
-" elseif has('unix')
-"   if hostname() =~ "liberte"
-"     :cd $HOME/Dropbox/
-"   elseif hostname() =~ "sardanapalus"
-"     :cd $HOME/Dropbox/Work
-"   endif
-" else
-"     :cd $HOME/
-" endif
+call system('infocmp | grep [sr]itm') | if !v:shell_error
+  highlight Comment cterm=italic
+endif
