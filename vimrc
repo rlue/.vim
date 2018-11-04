@@ -160,10 +160,6 @@ if isdirectory($HOME . '/Projects/vim-getting-things-down')
   Plug '~/Projects/vim-getting-things-down'
 endif
 
-if isdirectory($HOME . '/Projects/vim-daylog')
-  Plug '~/Projects/vim-daylog'
-endif
-
 " Colorschemes -----------------------------------------------------------------
 Plug        'morhetz/gruvbox'
 Plug     'raphamorim/lucario'
@@ -210,6 +206,7 @@ Plug           'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
 Plug           'aklt/plantuml-syntax'
 Plug    'nathangrigg/vim-beancount'
 Plug       'jamessan/vim-gnupg'
+Plug           'rlue/vim-daylog'
 " Plug           'rlue/vim-getting-things-down'
 
 " UI ---------------------------------------------------------------------------
