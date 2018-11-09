@@ -163,6 +163,7 @@ endif
 " Colorschemes -----------------------------------------------------------------
 Plug        'morhetz/gruvbox'
 Plug     'raphamorim/lucario'
+Plug    'mhartington/oceanic-next'
 Plug      'NLKNguyen/papercolor-theme'
 Plug          'KKPMW/sacredforest-vim'
 Plug       'junegunn/seoul256.vim'
@@ -626,10 +627,6 @@ if exists(':colorscheme') == 2 && !empty(globpath(&runtimepath, '/colors/hybrid.
   if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
     let g:limelight_conceal_ctermfg = 'darkgray'
   endif
-endif
-
-call system('infocmp | grep [sr]itm') | if !v:shell_error
-  highlight Comment cterm=italic
 endif
 
 call system('infocmp | grep [sr]itm') | if !v:shell_error
