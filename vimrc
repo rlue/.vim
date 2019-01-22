@@ -439,15 +439,20 @@ if exists('+colorcolumn')
   augroup END
 endif
 
-" Easy colorscheme switching
-if exists(':colorscheme') == 2
-  if !empty(globpath(&runtimepath, '/colors/hybrid.vim'))
-    nnoremap <Leader>ch :set background=dark <Bar> colorscheme hybrid <Bar> highlight Normal ctermbg=none<CR>
-  endif
+" Colorscheme
+if exists('+background') | set background=dark | endif
 
-  if !empty(globpath(&runtimepath, '/colors/PaperColor.vim'))
-    nnoremap <Leader>cp :set background=light <Bar> colorscheme PaperColor<CR>
+if exists(':colorscheme') == 2 && !empty(globpath(&runtimepath, '/colors/hybrid.vim'))
+  colorscheme hybrid
+  highlight Normal ctermbg=none
+
+  if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
+    let g:limelight_conceal_ctermfg = 'darkgray'
   endif
+endif
+
+call system('infocmp | grep [sr]itm') | if !v:shell_error
+  highlight Comment cterm=italic
 endif
 
 " Folding ----------------------------------------------------------------------
@@ -616,19 +621,3 @@ function! s:sessionLaunchedOn(machine)
     return $COMPUTERNAME ==? a:machine
   endif
 endfunction
-
-" Colorscheme ------------------------------------------------------------------
-if exists('+background') | set background=dark | endif
-
-if exists(':colorscheme') == 2 && !empty(globpath(&runtimepath, '/colors/hybrid.vim'))
-  colorscheme hybrid
-  highlight Normal ctermbg=none
-
-  if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
-    let g:limelight_conceal_ctermfg = 'darkgray'
-  endif
-endif
-
-call system('infocmp | grep [sr]itm') | if !v:shell_error
-  highlight Comment cterm=italic
-endif
