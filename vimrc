@@ -229,9 +229,18 @@ Plug        'felipec/notmuch-vim'
 
 if has('unix') | Plug 'tpope/vim-eunuch' | endif
 
-if v:version >= 740 && executable('fzf') &&
-      \ (!has('gui_running') || has('terminal'))
-  Plug fnamemodify(resolve(exepath('fzf')), ':h:h') | Plug 'junegunn/fzf.vim'
+let g:fzf_plugin_path =
+      \ get(
+      \   filter(
+      \     [fnamemodify(resolve(exepath('fzf')), ':h:h'),
+      \      fnamemodify(resolve(exepath('fzf')), ':h:h') . '/share/doc/fzf/examples'],
+      \     '!empty(globpath(v:val, "/plugin/fzf.vim"))'
+      \   ), 0
+      \ )
+
+if v:version >= 740 && !empty(g:fzf_plugin_path)
+      \ && (!has('gui_running') || has('terminal'))
+  Plug g:fzf_plugin_path | Plug 'junegunn/fzf.vim'
 endif
 
 call plug#end()
