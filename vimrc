@@ -188,7 +188,6 @@ Plug           'rlue/vim-rspec', { 'branch': 'feature/visual_selection' }
 Plug          'mhinz/vim-signify'
 Plug  'slim-template/vim-slim'
 Plug          'tpope/vim-sleuth'
-Plug          'posva/vim-vue'
 Plug         'lervag/vimtex'
 
 if (v:version >= 740) && executable('ctags') | Plug 'ludovicchabant/vim-gutentags' | endif
