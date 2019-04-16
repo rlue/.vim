@@ -97,11 +97,11 @@ nnoremap <C-w><C-k> <C-w>k<C-w>_<C-w><Bar>
 nnoremap <C-w><C-l> <C-w>l<C-w>_<C-w><Bar>
 
 " File Management --------------------------------------------------------------
-if isdirectory($HOME . '/Documents/Notes')
-  nnoremap <Leader>en :e ~/Documents/Notes/**/
+if isdirectory($HOME . '/notes')
+  nnoremap <Leader>en :e ~/notes/**/
 endif
-if filereadable($HOME . '/Documents/Notes/Accounting/Ledger.bean')
-  nnoremap <Leader>el :e ~/Documents/Notes/Accounting/Ledger.bean<CR>
+if filereadable($HOME . '/notes/ledger.bean')
+  nnoremap <Leader>el :e ~/notes/ledger.bean<CR>
 endif
 
 " Navigation -------------------------------------------------------------------
@@ -325,8 +325,8 @@ endif
 if !empty(globpath(&runtimepath, '/ftplugin/daylog.vim'))
   nnoremap <Leader>ed :call daylog#enter_log()<CR>
 
-  if isdirectory($HOME . '/Documents/Notes/Daylogs')
-    let g:daylog_home = $HOME . '/Documents/Notes/Daylogs'
+  if isdirectory($HOME . '/notes/daylog')
+    let g:daylog_home = $HOME . '/notes/daylog'
   endif
 endif
 
