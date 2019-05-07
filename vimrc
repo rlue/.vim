@@ -196,6 +196,7 @@ if exists('*pyeval') | Plug 'baverman/vial-http' | Plug 'baverman/vial' | endif
 
 " Text Manipulation ------------------------------------------------------------
 Plug         'mbbill/fencview'
+Plug    'vim-scripts/ReplaceWithRegister'
 Plug    'AndrewRadev/sideways.vim'
 Plug       'junegunn/vim-easy-align'
 Plug          'tpope/vim-speeddating'
