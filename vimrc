@@ -172,6 +172,7 @@ Plug           'w0ng/vim-hybrid'
 
 " Dev Tools --------------------------------------------------------------------
 Plug       'junegunn/gv.vim'
+Plug       'sharat87/roast.vim'
 Plug    'AndrewRadev/splitjoin.vim'
 Plug          'tpope/vim-bundler'
 Plug         'kchmck/vim-coffee-script'
