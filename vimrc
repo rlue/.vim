@@ -602,6 +602,9 @@ if exists('+ignorecase') | set ignorecase | endif   " Search with...
 if exists('+smartcase')  | set smartcase  | endif   " ...smart case recognition
 if exists('+wildignore') | set wildignore+=*.zip,*.swp,*.so | endif
 
+" Text parsing -----------------------------------------------------------------
+" if exists('+cpoptions') | set cpoptions+=J | endif  " from http://stevelosh.com/blog/2012/10/why-i-two-space/
+
 " External Tools ---------------------------------------------------------------
 
 " grep (repgrip/ag)
