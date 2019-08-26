@@ -171,6 +171,7 @@ Plug    'altercation/vim-colors-solarized'
 Plug           'w0ng/vim-hybrid'
 
 " Dev Tools --------------------------------------------------------------------
+Plug      'shumphrey/fugitive-gitlab.vim'
 Plug       'junegunn/gv.vim'
 Plug       'sharat87/roast.vim'
 Plug    'AndrewRadev/splitjoin.vim'
@@ -386,6 +387,8 @@ if !empty(globpath(&runtimepath, '/plugin/fugitive.vim'))
     autocmd!
     autocmd BufReadPost fugitive://* set bufhidden=delete
   augroup END
+
+  let g:fugitive_gitlab_domains = ['https://git.znuny.com']
 endif
 
 " vim-gutentags ----------------------------------------------------------------
