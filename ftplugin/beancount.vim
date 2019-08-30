@@ -5,7 +5,9 @@ setlocal foldmethod=expr
 setlocal foldexpr=FoldCommentHeadings(v:lnum)
 setlocal foldtext=FoldText()
 
-if executable('bean-web')
+if executable('fava')
+  nnoremap <buffer> <LocalLeader>w :!fava --host 0.0.0.0 %<CR>
+elseif executable('bean-web')
   nnoremap <buffer> <LocalLeader>w :!bean-web --public %<CR>
 endif
 
