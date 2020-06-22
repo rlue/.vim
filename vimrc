@@ -377,7 +377,8 @@ if !empty(globpath(&runtimepath, '/plugin/fugitive.vim'))
   nnoremap <Leader>gd :Gdiff<CR>
   nnoremap <Leader>gs :Gstatus<CR>
   nnoremap <Leader>gw :Gwrite<CR>
-  nnoremap <Leader>gc :Gcommit -m ""<Left>
+  nnoremap <Leader>gc :Gcommit<CR>
+  nnoremap <Leader>gC :Gcommit --amend --no-edit<CR>
   nnoremap <Leader>gp :Gpush<CR>
   nnoremap <Leader>gl :Glog<CR>
   nnoremap <Leader>gb :Gblame<CR>
