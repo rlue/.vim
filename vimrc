@@ -431,6 +431,11 @@ if !empty(globpath(&runtimepath, '/plugin/textobj/quote.vim'))
   augroup END
 endif
 
+" vimtex -----------------------------------------------------------------------
+if !empty(globpath(&runtimepath, '/autoload/vimtex.vim'))
+  let g:vimtex_view_method = 'mupdf'
+endif
+
 " UI ===========================================================================
 " This section concerns vim's user interface.
 
