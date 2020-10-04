@@ -155,11 +155,6 @@ endif
 
 call plug#begin()
 
-" WIP --------------------------------------------------------------------------
-if isdirectory($HOME . '/Projects/vim-getting-things-down')
-  Plug '~/Projects/vim-getting-things-down'
-endif
-
 " Colorschemes -----------------------------------------------------------------
 Plug        'morhetz/gruvbox'
 Plug     'raphamorim/lucario'
@@ -171,46 +166,47 @@ Plug    'altercation/vim-colors-solarized'
 Plug           'w0ng/vim-hybrid'
 
 " Dev Tools --------------------------------------------------------------------
-Plug      'shumphrey/fugitive-gitlab.vim'
-Plug       'junegunn/gv.vim'
-Plug       'sharat87/roast.vim'
-Plug    'AndrewRadev/splitjoin.vim'
 Plug          'tpope/vim-bundler'
-Plug         'kchmck/vim-coffee-script'
-Plug          'tpope/vim-commentary'
 Plug          'tpope/vim-dispatch'
-Plug    'AndrewRadev/vim-eco'
-Plug           'rlue/vim-fold-rspec'
-Plug          'tpope/vim-fugitive'
-Plug       'pangloss/vim-javascript'
-Plug      'MaxMEllon/vim-jsx-pretty'
-Plug          'tpope/vim-liquid'
+Plug          'tpope/vim-fugitive' | Plug 'junegunn/gv.vim' | Plug 'tpope/vim-rhubarb' | Plug 'shumphrey/fugitive-gitlab.vim'
 Plug          'tpope/vim-rails'
-Plug          'tpope/vim-rhubarb'
-Plug           'rlue/vim-rspec', { 'branch': 'feature/visual_selection' }
 Plug          'mhinz/vim-signify'
-Plug  'slim-template/vim-slim'
-Plug          'tpope/vim-sleuth'
-Plug         'lervag/vimtex'
 
 if (v:version >= 740) && executable('ctags') | Plug 'ludovicchabant/vim-gutentags' | endif
-if (v:version >= 800) | Plug 'w0rp/ale' | endif
-if exists('*pyeval') | Plug 'baverman/vial-http' | Plug 'baverman/vial' | endif
+if (v:version >= 800) | Plug 'dense-analysis/ale' | endif
+if exists('*py3eval') | Plug 'baverman/vial-http' | Plug 'baverman/vial' | endif
 
 " Text Manipulation ------------------------------------------------------------
 Plug         'mbbill/fencview'
 Plug    'vim-scripts/ReplaceWithRegister'
 Plug    'AndrewRadev/sideways.vim'
+Plug    'AndrewRadev/splitjoin.vim'
+Plug          'tpope/vim-commentary'
 Plug       'junegunn/vim-easy-align'
+Plug          'tpope/vim-sleuth'
 Plug          'tpope/vim-speeddating'
 Plug          'tpope/vim-surround'
 Plug           'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
 
 " ftplugins --------------------------------------------------------------------
 Plug           'aklt/plantuml-syntax'
-Plug    'nathangrigg/vim-beancount'
-Plug       'jamessan/vim-gnupg'
+Plug         'Quramy/tsuquyomi'
+Plug    'leafgarland/typescript-vim'
+" Plug    'nathangrigg/vim-beancount'
 Plug           'rlue/vim-daylog'
+Plug           'rlue/vim-fold-js'
+Plug           'rlue/vim-fold-rspec'
+Plug        'jparise/vim-graphql'
+Plug       'jamessan/vim-gnupg'
+Plug       'pangloss/vim-javascript'
+Plug      'MaxMEllon/vim-jsx-pretty'
+Plug          'tpope/vim-liquid'
+Plug       'hallison/vim-rdoc'
+Plug           'rlue/vim-rspec', { 'branch': 'feature/visual_selection' }
+Plug      'joker1007/vim-ruby-heredoc-syntax'
+Plug  'slim-template/vim-slim'
+Plug        'cespare/vim-toml'
+Plug         'lervag/vimtex'
 " Plug           'rlue/vim-getting-things-down'
 
 " UI ---------------------------------------------------------------------------
@@ -220,15 +216,12 @@ Plug    'vim-airline/vim-airline'
 Plug    'vim-airline/vim-airline-themes'
 Plug           'rlue/vim-barbaric'
 Plug       'justinmk/vim-dirvish'
-Plug         'henrik/vim-indexed-search'
+Plug          'tpope/vim-sleuth'
 Plug       'powerman/vim-plugin-AnsiEsc'
 Plug          'tpope/vim-repeat'
 Plug          'tpope/vim-rsi'
 Plug          'tpope/vim-sensible'
 Plug          'tpope/vim-unimpaired'
-
-" Mail -------------------------------------------------------------------------
-Plug        'felipec/notmuch-vim'
 
 if has('unix') | Plug 'tpope/vim-eunuch' | endif
 
@@ -254,12 +247,21 @@ if empty(glob(g:vim_home . '/plugged')) | PlugInstall | endif
 " PLUGIN CONFIGURATION =========================================================
 " ALE --------------------------------------------------------------------------
 if !empty(globpath(&runtimepath, '/plugin/ale.vim'))
-  let g:ale_set_quickfix = 1
   let g:ale_lint_on_text_changed = 'normal'
   let g:ale_lint_on_insert_leave = 1
+  let g:ale_fix_on_save = 1
   nnoremap <Leader>at :ALEToggle<CR>
   nnoremap <Leader>ad :ALEDetail<CR>
   nnoremap <Leader>al :ALELint<CR>
+  nnoremap <Leader>af :ALEFix<CR>
+
+  let g:ale_javascript_eslint_use_global = 1
+  let g:ale_javascript_eslint_executable = 'yarn'
+  let g:ale_javascript_eslint_options = 'run eslint'
+  let g:ale_fixers = {
+  \   'javascriptreact': ['eslint'],
+  \   'javascript': ['eslint'],
+  \ }
 endif
 
 " fzf.vim ----------------------------------------------------------------------
@@ -317,6 +319,13 @@ if !empty(globpath(&runtimepath, '/plugin/sideways.vim'))
   nnoremap <Leader>T :SidewaysRight<CR>
 endif
 
+" tsuquoymi --------------------------------------------------------------------
+if !empty(globpath(&runtimepath, '/plugin/tsuquyomi.vim'))
+  set ballooneval
+  autocmd FileType typescript setlocal balloonexpr=tsuquyomi#balloonexpr()
+  autocmd FileType typescript nmap <buffer> <LocalLeader>t : <C-u>echo tsuquyomi#hint()<CR>
+endif
+
 " vim-airline ------------------------------------------------------------------
 if !empty(globpath(&runtimepath, '/plugin/airline.vim'))
   let g:airline_powerline_fonts                   = 1
@@ -337,12 +346,12 @@ endif
 " vim-dirvish ------------------------------------------------------------------
 if !empty(globpath(&runtimepath, '/plugin/dirvish.vim'))
   " Disable netrw
-  let g:loaded_netrwPlugin = 1
+  " let g:loaded_netrwPlugin = 1
 
   " Re-enable netrw's `gx` command
-  nnoremap gx :call
-        \ netrw#BrowseX(expand(exists("g:netrw_gx") ? g:netrw_gx : '<cfile>'),
-        \               netrw#CheckIfRemote())<CR>
+  " nnoremap gx :call
+  "       \ netrw#BrowseX(expand(exists("g:netrw_gx") ? g:netrw_gx : '<cfile>'),
+  "       \               netrw#CheckIfRemote())<CR>
 
   augroup vimrc_dirvish
     autocmd!
@@ -434,6 +443,7 @@ endif
 " vimtex -----------------------------------------------------------------------
 if !empty(globpath(&runtimepath, '/autoload/vimtex.vim'))
   let g:vimtex_view_method = 'mupdf'
+  let g:tex_flavor = 'latex'
 endif
 
 " UI ===========================================================================
