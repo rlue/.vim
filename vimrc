@@ -618,12 +618,24 @@ if exists('+encoding') | set encoding=utf-8 | scriptencoding utf-8 | endif
 " Command Line Options ---------------------------------------------------------
 
 cabbr <expr> %% fnameescape(expand('%:p:h'))        " shortcut: directory of current buffer
+if exists('+path')       | set path+=**   | endif   " Search files recursively
 if exists('+ignorecase') | set ignorecase | endif   " Search with...
 if exists('+smartcase')  | set smartcase  | endif   " ...smart case recognition
 if exists('+wildignore') | set wildignore+=*.zip,*.swp,*.so | endif
 
 " Text parsing -----------------------------------------------------------------
 " if exists('+cpoptions') | set cpoptions+=J | endif  " from http://stevelosh.com/blog/2012/10/why-i-two-space/
+
+" Snippets ---------------------------------------------------------------------
+nnoremap <silent> <LocalLeader>bp :call <SID>insertBoilerplate()<CR>
+
+function! s:insertBoilerplate()
+  let l:boilerplate_file = g:vim_home . '/boilerplate/_.' . &filetype
+
+  if filereadable(l:boilerplate_file)
+    exec '-1read ' . l:boilerplate_file
+  endif
+endfunction
 
 " External Tools ---------------------------------------------------------------
 
