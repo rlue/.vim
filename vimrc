@@ -157,6 +157,7 @@ call plug#begin()
 
 " Colorschemes -----------------------------------------------------------------
 Plug        'morhetz/gruvbox'
+Plug        'cocopon/iceberg.vim'
 Plug     'raphamorim/lucario'
 Plug    'mhartington/oceanic-next'
 Plug      'NLKNguyen/papercolor-theme'

@@ -5,10 +5,26 @@ set guioptions=                           " Disable GUI chrome
 set lines=999 columns=90                  " Maximize window height
 
 " Colors -----------------------------------------------------------------------
-if !empty(globpath(&rtp, 'colors/seoul256.vim'))
-  colorscheme seoul256
+let s:colorschemes = [
+      \ "gruvbox",
+      \ "iceberg",
+      \ "OceanicNext",
+      \ "sacredforest",
+      \ "seoul256",
+      \ "solarized",
+      \ ]
+
+let s:colorscheme_index = system(
+      \ "awk -v min=0 -v max="
+      \ . (len(s:colorschemes) - 1)
+      \ . " 'BEGIN{srand(); print int(min+rand()*(max-min+1))}'"
+      \ )
+
+execute "colorscheme " . s:colorschemes[s:colorscheme_index]
+if s:colorschemes[s:colorscheme_index] == "PaperColor"
+  set background=light
+else
   set background=dark
-  AirlineTheme lucius | AirlineRefresh
 endif
 
 " Fonts ------------------------------------------------------------------------
