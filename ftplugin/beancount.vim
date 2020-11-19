@@ -1,4 +1,5 @@
 setlocal nonumber
+setlocal nowrap
 
 nnoremap <silent> <buffer> <LocalLeader><Space> :call <SID>pad_line()<CR>
 augroup beancount
