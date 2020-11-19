@@ -2,7 +2,6 @@
 
 " General ----------------------------------------------------------------------
 set guioptions=                           " Disable GUI chrome 
-set lines=999 columns=90                  " Maximize window height
 
 " Colors -----------------------------------------------------------------------
 let s:colorschemes = [
@@ -29,12 +28,13 @@ endif
 
 " Fonts ------------------------------------------------------------------------
 if hostname() =~# 'herringbone'
-  set guifont=Source\ Code\ Pro\ 14
-elseif hostname() =~# 'shibori'
-  set guifont=Source\ Code\ Pro\ 14
+  set guifont=PragmataPro\ 23
 else
-  set guifont=Source\ Code\ Pro\ Light:h18
+  set guifont=PragmataPro:h18
 endif
+
+" Maximize window height (not needed with i3)
+" set lines=999 columns=90
 
 highlight Comment gui=italic
 
