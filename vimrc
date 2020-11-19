@@ -190,10 +190,10 @@ Plug          'tpope/vim-surround'
 Plug           'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
 
 " ftplugins --------------------------------------------------------------------
+Plug         'othree/html5.vim'
 Plug           'aklt/plantuml-syntax'
 Plug         'Quramy/tsuquyomi'
-Plug    'leafgarland/typescript-vim'
-" Plug    'nathangrigg/vim-beancount'
+Plug         'hail2u/vim-css3-syntax'
 Plug           'rlue/vim-daylog'
 Plug           'rlue/vim-fold-js'
 Plug           'rlue/vim-fold-rspec'
@@ -209,6 +209,8 @@ Plug  'slim-template/vim-slim'
 Plug        'cespare/vim-toml'
 Plug         'lervag/vimtex'
 " Plug           'rlue/vim-getting-things-down'
+Plug         'othree/yajs.vim'
+Plug 'HerringtonDarkholme/yats.vim'
 
 " UI ---------------------------------------------------------------------------
 Plug       'junegunn/goyo.vim'
@@ -216,6 +218,7 @@ Plug       'junegunn/limelight.vim'
 Plug    'vim-airline/vim-airline'
 Plug    'vim-airline/vim-airline-themes'
 Plug           'rlue/vim-barbaric'
+Plug             'ap/vim-css-color'
 Plug       'justinmk/vim-dirvish'
 Plug          'tpope/vim-sleuth'
 Plug       'powerman/vim-plugin-AnsiEsc'
@@ -257,7 +260,6 @@ if !empty(globpath(&runtimepath, '/plugin/ale.vim'))
   nnoremap <Leader>af :ALEFix<CR>
 
   let g:ale_javascript_eslint_use_global = 1
-  let g:ale_javascript_eslint_executable = 'yarn'
   let g:ale_javascript_eslint_options = 'run eslint'
   let g:ale_fixers = {
   \   'javascriptreact': ['eslint'],
