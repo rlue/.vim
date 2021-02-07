@@ -70,5 +70,18 @@ $ rm -rf ~/Downloads/vim
 
 (All the settings in `vimrc` have been written to maximize compatibility with various versions of vim you may encounter which, for instance, may not have been compiled with clipboard support.)
 
+Adopting the XDG directory spec
+-------------------------------
+
+Think `~/.config/vim` > `~/.vim`? Try:
+
+```bash
+# ~/.profile
+
+export VIMINIT="set nocp | source ${XDG_CONFIG_HOME:-$HOME/.config}/vim/vimrc"
+```
+
+(Stolen from [this blog post](https://blog.joren.ga/tools/vim-xdg) by Jakub Łukasiewicz.)
+
 [modularity]: https://github.com/rlue/.vim/blob/4363cea2d762d895ee9e6b69acc2184fc0b9a597/README.md#modularity
 [romainl]: https://www.reddit.com/r/vim/comments/6hz4il/two_good_ideas_for_your_vim_config_building_in/dj2ule0/
