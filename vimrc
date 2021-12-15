@@ -504,12 +504,18 @@ endif
 " Colorscheme
 if exists('+background') | set background=dark | endif
 
-if exists(':colorscheme') == 2 && !empty(globpath(&runtimepath, '/colors/hybrid.vim'))
-  colorscheme hybrid
-  highlight Normal ctermbg=none
+if exists(':colorscheme') == 2
+  if filereadable($HOME . '/.config/darkmode') && !readfile($HOME . '/.config/darkmode')[0] &&
+        \ !empty(globpath(&runtimepath, '/colors/PaperColor.vim'))
+    colorscheme PaperColor
+    set bg=light
+  elseif !empty(globpath(&runtimepath, '/colors/hybrid.vim'))
+    colorscheme hybrid
+    highlight Normal ctermbg=none
 
-  if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
-    let g:limelight_conceal_ctermfg = 'darkgray'
+    if !empty(globpath(&runtimepath, '/plugin/limelight.vim'))
+      let g:limelight_conceal_ctermfg = 'darkgray'
+    endif
   endif
 endif
 
