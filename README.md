@@ -1,8 +1,21 @@
-`/Users/rlue/.vim`
-==================
+`~/.vim`
+========
 
 As with anyone’s config files, most of the stuff in here is pretty personal.
 Here are a couple of good ideas I had that might be worth trying yourself:
+
+XDG Spec Compliance
+-------------------
+
+Think `~/.config/vim` > `~/.vim`? Try:
+
+```bash
+# ~/.profile
+
+export VIMINIT="set nocp | source ${XDG_CONFIG_HOME:-$HOME/.config}/vim/vimrc"
+```
+
+(Stolen from [this blog post][] by Jakub Łukasiewicz.)
 
 Organizing `vimrc` with Folds
 -----------------------------
@@ -12,30 +25,27 @@ Folds are amazing. Here they are in action on my `vimrc`:
 ```
 " ~/.vim/vimrc
 
-" Initializing variables for portability
-let g:vim_home = expand('<sfile>:p:h')
-let $MYVIMRC   = g:vim_home . '/vimrc'
-let $MYGVIMRC  = g:vim_home . '/gvimrc'
+" PATHS ========================================================================
+" XDG compliance (adapted from https://blog.joren.ga/tools/vim-xdg) ----- [30] -
 
 " MAPPINGS =====================================================================
-
-" BASE ------------------------------------------------------------------- [4] -
-" TEXT MANIPULATION ----------------------------------------------------- [35] -
-" BUFFER MANAGEMENT ------------------------------------------------------ [7] -
-" UI & WINDOW MANAGEMENT ------------------------------------------------ [12] -
-" FILE MANAGEMENT -------------------------------------------------------- [7] -
-" NAVIGATION ------------------------------------------------------------ [13] -
-" MISCELLANEOUS --------------------------------------------------------- [21] -
+" Base ------------------------------------------------------------------- [4] -
+" Text Manipulation ----------------------------------------------------- [35] -
+" Buffer Management ------------------------------------------------------ [7] -
+" UI & Window Management ------------------------------------------------ [12] -
+" File Management -------------------------------------------------------- [7] -
+" Navigation ------------------------------------------------------------ [13] -
+" Miscellaneous --------------------------------------------------------- [21] -
                                                                                 
 " PER-MACHINE ==================================================================
 
 " SEEDBOX ---------------------------------------------------------------- [3] -
-" DEFAULT WORKING DIRECTORY --------------------------------------------- [14] -
+" Default Working Directory --------------------------------------------- [14] -
 
 " PLUGINS ======================================================================
 
-" VIM-PLUG -------------------------------------------------------------- [41] -
-" BROWSERLINK ----------------------------------------------------------- [23] -
+" vim-plug -------------------------------------------------------------- [41] -
+" browserlink ----------------------------------------------------------- [23] -
 ...
 ```
 
@@ -58,6 +68,41 @@ Functions get folded, too.
 Portability
 -----------
 
+### with Neovim
+
+> **Note:** Neovim looks for its configuration directory under `~/.config/nvim`.
+
+Neovim adopts some breaking changes with vim’s dotfile scheme
+(including compliance with the XDG specification! 🎉🎉🎉).
+That’s fine if you know for sure which team you’re on,
+but I’m still trying Neovim out,
+and want to reserve the option to switch back one day.
+
+For cross-compatibility, this repo includes **two** config files:
+
+* `init.vim`, which is read by Neovim only
+* `vimrc`, which is read by both (thanks to this little trick):
+
+  ```viml
+  " init.vim
+
+  source <sfile>:p:h/vimrc
+
+  " ...followed by any backwards-incompatible configuration
+  ```
+
+We also define some path variables at launch,
+which are used to set dotfile paths as appropriate
+(_e.g.,_ `set undodir=$VIM_CACHE_HOME/undo`):
+
+|                    | Vim      | Vim (with [XDG compliance hack](#xdg-spec-compliance)) | Neovim                  |
+| ------------------ | -------- | ------------------------------------------------------ | ----------------------- |
+| `$VIM_CONFIG_HOME` | `~/.vim` | `$XDG_CONFIG_HOME/vim`                                 | `$XDG_CONFIG_HOME/nvim` |
+| `$VIM_CACHE_HOME`  | `~/.vim` | `~/.cache`                                             | `~/.cache`              |
+| `$VIM_DATA_HOME`   | `~/.vim` | `$XDG_DATA_HOME/vim`                                   | `$XDG_DATA_HOME/nvim`   |
+
+### on someone else’s machine / user account
+
 There may be times when you want to fire up your vim config on someone else’s computer.
 Maybe you have to borrow your friend’s laptop because you forgot your charger.
 Maybe you’re asked to do a live coding challenge in an interview,
@@ -71,7 +116,7 @@ The other way (_i.e.,_ the polite way) involves passing some command line flags 
 to specify an alternate `vimrc` and runtime path:
 
 ```
-$ vim -Nu <vimrc> --cmd "let &rtp = substitute(&rtp, \"$HOME/.vim\", <vim_home>, 'g')"
+$ vim -Nu <vimrc>
 ```
 
 That’s a real mouthful. Instead, try loading the included binstubs onto your `$PATH`:
@@ -92,19 +137,6 @@ $ rm -rf ~/Downloads/vim
 (All the settings in `vimrc` have been written
 to maximize compatibility with various versions of vim you may encounter
 which, for instance, may not have been compiled with clipboard support.)
-
-Adopting the XDG directory spec
--------------------------------
-
-Think `~/.config/vim` > `~/.vim`? Try:
-
-```bash
-# ~/.profile
-
-export VIMINIT="set nocp | source ${XDG_CONFIG_HOME:-$HOME/.config}/vim/vimrc"
-```
-
-(Stolen from [this blog post][] by Jakub Łukasiewicz.)
 
 [modularity]: https://github.com/rlue/.vim/blob/4363cea2d762d895ee9e6b69acc2184fc0b9a597/README.md#modularity
 [romainl]: https://www.reddit.com/r/vim/comments/6hz4il/two_good_ideas_for_your_vim_config_building_in/dj2ule0/
