@@ -586,6 +586,8 @@ if exists('+splitbelow')  | set splitbelow  | endif
 if exists('+splitright')  | set splitright  | endif
 
 " Line Wrapping ----------------------------------------------------------------
+if exists('+wrap')        | set nowrap   | endif
+
 " Wrap at word boundaries (instead of breaking words at textwidth)
 if exists('+linebreak')   | set linebreak   | endif
 
