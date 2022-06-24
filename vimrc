@@ -189,9 +189,11 @@ Plug    'altercation/vim-colors-solarized'
 Plug           'w0ng/vim-hybrid'
 
 " Dev Tools --------------------------------------------------------------------
+" Plug          'rust-lang/rust'
 Plug          'tpope/vim-bundler'
 Plug          'tpope/vim-dispatch'
 Plug          'tpope/vim-fugitive' | Plug 'junegunn/gv.vim' | Plug 'tpope/vim-rhubarb' | Plug 'shumphrey/fugitive-gitlab.vim'
+Plug          'fatih/vim-go'
 Plug          'tpope/vim-rails'
 Plug          'mhinz/vim-signify'
 
@@ -214,7 +216,6 @@ Plug           'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
 " ftplugins --------------------------------------------------------------------
 Plug         'othree/html5.vim'
 Plug           'aklt/plantuml-syntax'
-Plug         'Quramy/tsuquyomi'
 Plug         'hail2u/vim-css3-syntax'
 Plug           'rlue/vim-daylog'
 Plug           'rlue/vim-fold-js'
@@ -230,9 +231,6 @@ Plug      'joker1007/vim-ruby-heredoc-syntax'
 Plug  'slim-template/vim-slim'
 Plug        'cespare/vim-toml'
 Plug         'lervag/vimtex'
-" Plug           'rlue/vim-getting-things-down'
-Plug         'othree/yajs.vim'
-Plug 'HerringtonDarkholme/yats.vim'
 
 " UI ---------------------------------------------------------------------------
 Plug       'junegunn/goyo.vim'
@@ -342,12 +340,6 @@ if !empty(globpath(&runtimepath, '/plugin/sideways.vim'))
   " t as in Transpose
   nnoremap <Leader>t :SidewaysLeft<CR>
   nnoremap <Leader>T :SidewaysRight<CR>
-endif
-
-" tsuquoymi --------------------------------------------------------------------
-if !empty(globpath(&runtimepath, '/plugin/tsuquyomi.vim'))
-  autocmd FileType typescript setlocal balloonexpr=tsuquyomi#balloonexpr()
-  autocmd FileType typescript nmap <buffer> <LocalLeader>t : <C-u>echo tsuquyomi#hint()<CR>
 endif
 
 " vim-airline ------------------------------------------------------------------
@@ -660,6 +652,13 @@ if exists('+grepprg') && exists('+grepformat')
   endif
 
   let &grepformat = '%f:%l:%c:%m'             
+endif
+
+if executable('black')
+    augroup black
+      autocmd!
+      autocmd BufWritePost *.py silent exec "!black -q %"
+    augroup END
 endif
 
 " PER-MACHINE ==================================================================
