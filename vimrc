@@ -346,7 +346,6 @@ endif
 
 " tsuquoymi --------------------------------------------------------------------
 if !empty(globpath(&runtimepath, '/plugin/tsuquyomi.vim'))
-  set ballooneval
   autocmd FileType typescript setlocal balloonexpr=tsuquyomi#balloonexpr()
   autocmd FileType typescript nmap <buffer> <LocalLeader>t : <C-u>echo tsuquyomi#hint()<CR>
 endif
