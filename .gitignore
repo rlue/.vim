@@ -1,5 +1,5 @@
-/autoload/plug.vim
+/site/autoload/plug.vim
 /viminfo
-/vimundo/
+/undo/
 /plugged/
 /swap/

@@ -1,35 +1,41 @@
-" INIT =========================================================================
-" XDG support (via https://blog.joren.ga/tools/vim-xdg)
+" PATHS ========================================================================
+" XDG compliance (adapted from https://blog.joren.ga/tools/vim-xdg) ------------
+if empty($XDG_CACHE_HOME)  | let $XDG_CACHE_HOME  = $HOME . "/.cache"       | endif
+if empty($XDG_CONFIG_HOME) | let $XDG_CONFIG_HOME = $HOME . "/.config"      | endif
+if empty($XDG_DATA_HOME)   | let $XDG_DATA_HOME   = $HOME . "/.local/share" | endif
 
-if empty($MYVIMRC) | let $MYVIMRC = expand('<sfile>:p') | endif
-
-if empty($XDG_CACHE_HOME)  | let $XDG_CACHE_HOME  = $HOME."/.cache"       | endif
-if empty($XDG_CONFIG_HOME) | let $XDG_CONFIG_HOME = $HOME."/.config"      | endif
-if empty($XDG_DATA_HOME)   | let $XDG_DATA_HOME   = $HOME."/.local/share" | endif
-
-set runtimepath^=$XDG_CONFIG_HOME/vim
-set runtimepath+=$XDG_DATA_HOME/vim
-set runtimepath+=$XDG_CONFIG_HOME/vim/after
-
-set packpath^=$XDG_DATA_HOME/vim,$XDG_CONFIG_HOME/vim
-set packpath+=$XDG_CONFIG_HOME/vim/after,$XDG_DATA_HOME/vim/after
-
-let g:netrw_home = $XDG_DATA_HOME."/vim"
-call mkdir($XDG_DATA_HOME."/vim/spell", 'p', 0700)
-set viewdir=$XDG_DATA_HOME/vim/view | call mkdir(&viewdir, 'p', 0700)
-
-set backupdir=$XDG_CACHE_HOME/vim/backup | call mkdir(&backupdir, 'p', 0700)
-set directory=$XDG_CACHE_HOME/vim/swap   | call mkdir(&directory, 'p', 0700)
-set undodir=$XDG_CACHE_HOME/vim/undo     | call mkdir(&undodir,   'p', 0700)
-
-if !has('nvim') " Neovim has its own special location
-  set viminfofile=$XDG_CACHE_HOME/vim/viminfo
+if $VIMINIT =~ "source " . $XDG_CONFIG_HOME . "/vim/vimrc"
+  if empty($VIM_CACHE_HOME)  | let $VIM_CACHE_HOME  = $XDG_CACHE_HOME . "/vim"  | endif
+  if empty($VIM_CONFIG_HOME) | let $VIM_CONFIG_HOME = $XDG_CONFIG_HOME . "/vim" | endif
+  if empty($VIM_DATA_HOME)   | let $VIM_DATA_HOME   = $XDG_DATA_HOME . "/vim"   | endif
+else
+  if empty($VIM_CACHE_HOME)  | let $VIM_CACHE_HOME  = expand('<sfile>:p:h') | endif
+  if empty($VIM_CONFIG_HOME) | let $VIM_CONFIG_HOME = expand('<sfile>:p:h') | endif
+  if empty($VIM_DATA_HOME)   | let $VIM_DATA_HOME   = expand('<sfile>:p:h') | endif
 endif
 
-" Initializing variables for portability
-let g:vim_home = expand('<sfile>:p:h')
-let $MYVIMRC   = g:vim_home . '/vimrc'
-let $MYGVIMRC  = g:vim_home . '/gvimrc'
+set runtimepath+=$VIM_DATA_HOME
+set packpath^=$VIM_DATA_HOME
+set packpath+=$VIM_DATA_HOME/after
+
+let g:netrw_home = $VIM_DATA_HOME
+call mkdir($VIM_DATA_HOME . "/spell", 'p', 0700)
+set viewdir=$VIM_DATA_HOME/view      | call mkdir(&viewdir, 'p', 0700)
+set backupdir=$VIM_CACHE_HOME/backup | call mkdir(&backupdir, 'p', 0700)
+set directory=$VIM_CACHE_HOME/swap   | call mkdir(&directory, 'p', 0700)
+set undodir=$VIM_CACHE_HOME/undo     | call mkdir(&undodir,   'p', 0700)
+
+if !has('nvim')
+  let $MYVIMRC   = $VIM_CONFIG_HOME . '/vimrc'
+  let $MYGVIMRC  = $VIM_CONFIG_HOME . '/gvimrc'
+
+  let &runtimepath = substitute(&runtimepath, expand("$HOME/.vim"), $VIM_CONFIG_HOME, "g")
+  let &packpath = substitute(&packpath, expand("$HOME/.vim"), $VIM_CONFIG_HOME, "g")
+  set viminfofile=$VIM_CACHE_HOME/viminfo
+else
+  let $MYVIMRC   = $VIM_CONFIG_HOME . '/init.vim'
+  let $MYGVIMRC  = $VIM_CONFIG_HOME . '/ginit.vim'
+endif
 
 " STAGING ======================================================================
 
@@ -152,21 +158,9 @@ endfunction
 
 " $MYVIMRC source/edit
 nnoremap <Leader>ev :e $MYVIMRC<CR>
-nnoremap <silent> <Leader>sv :call UpdateRCs() <Bar> source $MYVIMRC <Bar>
+nnoremap <silent> <Leader>sv source $MYVIMRC <Bar>
             \ if has('gui_running') <Bar> source $MYGVIMRC <Bar> endif<Bar>
             \ if exists(':AirlineRefresh') <Bar> AirlineRefresh <Bar> endif<CR>
-
-" Save all open vimrc buffers, then source vimrc
-function! UpdateRCs()
-  let l:this_buf    = bufnr('%')
-  let l:open_bufs   = filter(range(1, bufnr('$')), 'buflisted(v:val)')
-  let l:config_bufs = filter(l:open_bufs, 
-              \           "expand('#' . v:val . ':p') =~# '^" . g:vim_home . "/g\\=vimrc'")
-  for l:bufnr in l:config_bufs
-    exec l:bufnr . 'buffer | update'
-  endfor
-  exec l:this_buf . 'buffer'
-endfunction
 
 " Disable Ex mode (http://www.bestofvim.com/tip/leave-ex-mode-good/)
 nnoremap Q <Nop>
@@ -176,12 +170,12 @@ nnoremap Q <Nop>
 
 " PLUGIN MANAGEMENT ============================================================
 " One-time setup: Install vim-plug ---------------------------------------------
-if empty(glob(g:vim_home . '/autoload/plug.vim'))
-  exec 'silent !curl -fLo ' . g:vim_home . '/autoload/plug.vim --create-dirs
+if empty(glob($VIM_DATA_HOME . '/site/autoload/plug.vim'))
+  exec 'silent !curl -fLo ' . $VIM_DATA_HOME . '/site/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 endif
 
-call plug#begin(g:vim_home . '/plugged')
+call plug#begin($VIM_DATA_HOME . '/plugged')
 
 " Colorschemes -----------------------------------------------------------------
 Plug        'morhetz/gruvbox'
@@ -274,7 +268,7 @@ endif
 call plug#end()
 
 " One-time setup: Install plugins ----------------------------------------------
-if empty(glob(g:vim_home . '/plugged')) | PlugInstall | endif
+if empty(glob($VIM_DATA_HOME . '/plugged')) | PlugInstall | endif
 
 " PLUGIN CONFIGURATION =========================================================
 " ALE --------------------------------------------------------------------------
@@ -608,23 +602,13 @@ if exists('+breakindent') | set breakindent | endif
 " how it loads buffers, loads new files, handles file metadata, etc.
 
 " Environment Persistence ------------------------------------------------------
-
-if &viminfo !~# ',n'              " Store viminfo within .vim/
-  let &viminfo .= ',n' . g:vim_home . '/viminfo'
-endif
-
 if has('persistent_undo')         " Store vimundo within .vim/
   set undofile
   set undolevels=5000
-  let &undodir = g:vim_home . '/vimundo'
-  if !isdirectory(&undodir)
-    call mkdir(&undodir)
-  else
-    augroup pruneUndo
-      autocmd!
-      autocmd CursorHold,CursorHoldI * call pruneUndo#initialize(&undodir)
-    augroup END
-  endif
+  augroup pruneUndo
+    autocmd!
+    autocmd CursorHold,CursorHoldI * call pruneUndo#initialize(&undodir)
+  augroup END
 endif
 
 " Encryption -------------------------------------------------------------------
@@ -636,14 +620,6 @@ if has('crypt-blowfish2') | set cryptmethod=blowfish2 | endif
 if exists('+nobackup')   | set nobackup       | endif " Disable auto-backup when overwriting files
 if exists('+hidden')     | set hidden         | endif " Keep buffers alive when abandoned
 if exists('+backupcopy') | set backupcopy=yes | endif " Force backups to be copied from original, not renamed
-
-" Store all swap files together
-if exists('+directory')
-  if !isdirectory(g:vim_home . '/swap')
-    call mkdir(g:vim_home . '/swap')
-  endif
-  let &directory = g:vim_home . '/swap'
-endif
 
 " File Metadata ----------------------------------------------------------------
 
@@ -667,7 +643,7 @@ if exists('+wildignore') | set wildignore+=*.zip,*.swp,*.so | endif
 nnoremap <silent> <LocalLeader>bp :call <SID>insertBoilerplate()<CR>
 
 function! s:insertBoilerplate()
-  let l:boilerplate_file = g:vim_home . '/boilerplate/_.' . &filetype
+  let l:boilerplate_file = $VIM_CONFIG_HOME . '/boilerplate/_.' . &filetype
 
   if filereadable(l:boilerplate_file)
     exec '-1read ' . l:boilerplate_file

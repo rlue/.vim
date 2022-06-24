@@ -1,7 +1,7 @@
 #! /bin/sh
 
 if [ -n "$VIMHOME" -a -n "$GVIMBIN" ] ; then
-  "$GVIMBIN" -Nu "$VIMHOME/vimrc" -U \"$VIMHOME/gvimrc\" --cmd "let &rtp = substitute(&rtp, \"$HOME/.vim\", \"$VIMHOME\", \"g\")" "$@"
+  "$GVIMBIN" -Nu "$VIMHOME/vimstubs/vimrc" -U \"$VIMHOME/gvimrc\" "$@"
 else
   cat <<EOF
 To load this shim, run the following command:

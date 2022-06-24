@@ -1,0 +1,5 @@
+let $VIM_CONFIG_HOME = expand('<sfile>:p:h')
+let $VIM_CACHE_HOME  = expand('<sfile>:p:h')
+let $VIM_DATA_HOME   = expand('<sfile>:p:h')
+
+source <sfile>:p:h:h/vimrc

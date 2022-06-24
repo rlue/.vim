@@ -4,7 +4,7 @@
 
 stubdir=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
 export VIMHOME="$(dirname $stubdir)"
-[ -z $VIMINIT ] || export VIMINIT="set nocp | let &rtp = substitute(&rtp, \"$HOME/.vim\", \"$VIMHOME\", \"g\") | source $VIMHOME/vimrc"
+unset VIMINIT
 
 # 1. Clean up $PATH ------------------------------------------------------------
 # per https://stackoverflow.com/a/24057360/4865822
