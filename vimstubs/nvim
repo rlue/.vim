@@ -1,0 +1,13 @@
+#! /bin/sh
+
+if [ -n "$VIMHOME" -a -n "$NVIMBIN" ] ; then
+  "$NVIMBIN" -Nu "$VIMHOME/vimrc" "$@"
+else
+  cat <<EOF
+To load this shim, run the following command:
+
+  $ source $(cd $(dirname $0) ; pwd)/load
+
+EOF
+  exit 1
+fi

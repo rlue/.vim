@@ -4,6 +4,7 @@
 
 stubdir=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
 export VIMHOME="$(dirname $stubdir)"
+[ -z $VIMINIT ] || export VIMINIT="set nocp | let &rtp = substitute(&rtp, \"$HOME/.vim\", \"$VIMHOME\", \"g\") | source $VIMHOME/vimrc"
 
 # 1. Clean up $PATH ------------------------------------------------------------
 # per https://stackoverflow.com/a/24057360/4865822
@@ -18,6 +19,10 @@ if [ -x "/Applications/MacVim.app/Contents/MacOS/vim" ]; then
   export VIMBIN="/Applications/MacVim.app/Contents/MacOS/vim"
 elif hash vim 2>/dev/null; then
   export VIMBIN="$(which vim)"
+fi
+
+if hash nvim 2>/dev/null; then
+  export NVIMBIN="$(which nvim)"
 fi
 
 # 3. Find system gvim ----------------------------------------------------------

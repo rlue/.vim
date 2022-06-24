@@ -181,7 +181,7 @@ if empty(glob(g:vim_home . '/autoload/plug.vim'))
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 endif
 
-call plug#begin()
+call plug#begin(g:vim_home . '/plugged')
 
 " Colorschemes -----------------------------------------------------------------
 Plug        'morhetz/gruvbox'
