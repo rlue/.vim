@@ -2,7 +2,8 @@
 
 if empty(globpath(&runtimepath, '/plugged/limelight.vim')) | finish | endif
 
-let g:limelight_default_coefficient = 0.7             " Set default shading
+let g:limelight_default_coefficient = 0.7
+let g:limelight_conceal_ctermfg = 'darkgray'
 
 if empty(globpath(&runtimepath, '/plugged/goyo.vim')) | finish | endif
 

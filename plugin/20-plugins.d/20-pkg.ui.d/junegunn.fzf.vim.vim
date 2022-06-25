@@ -6,6 +6,7 @@ nnoremap <Leader>zf :Files<CR>
 nnoremap <Leader>zb :Buffers<CR>
 nnoremap <Leader>zl :Lines<CR>
 nnoremap <Leader>zh :Helptags<CR>
+nnoremap <Leader>zH :History<CR>
 
 if executable('rg') && (exists(':Rg') != 2)
   command! -bang -nargs=* Rg

@@ -1,8 +1,8 @@
 setlocal foldenable
 setlocal foldlevel=1
 setlocal foldmethod=expr
-setlocal foldexpr=FoldCommentHeadings(v:lnum,'FoldVim')
-setlocal foldtext=FoldText('FoldStatsVim')
+setlocal foldexpr=headingFold#FoldCommentHeadings(v:lnum,'FoldVim')
+setlocal foldtext=headingFold#FoldText('FoldStatsVim')
 
 function! FoldVim(lnum)
   if match(getline(a:lnum), '^\s*function!\= \(\u\|s:\|\w\+#\).\+\(.*\)') == 0

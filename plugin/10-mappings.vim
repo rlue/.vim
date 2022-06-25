@@ -67,11 +67,9 @@ vnoremap <silent> zP :<C-u>call ZeroPaste('P')<CR>
 " Buffer Management ------------------------------------------------------------
 " Save
 nnoremap <Leader>w :update<CR>
-nnoremap <Leader>W :wa<CR>
 
 " Switch
-nnoremap <Leader>b :ls<CR>:silent! b
-nnoremap <Leader>B :browse oldfiles<CR>
+nnoremap <Leader>b :b <C-z>
 
 " vimdiff
 nnoremap du :diffupdate<CR>
@@ -103,26 +101,14 @@ endif
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
-" Find cursor
-nnoremap <silent> <Leader><Leader> :call FlashLine()<CR>
-function! FlashLine()
-  for s:i in [30, 50, 30, 250]
-    set cursorline!
-    exec 'sleep ' . s:i . 'm'
-    redraw
-  endfor
-endfunction
-
 " Miscellaneous ----------------------------------------------------------------
 
 " $MYVIMRC source/edit
 nnoremap <Leader>ev :e $VIM_CONFIG_HOME/vimrc<CR>
-nnoremap <silent> <Leader>sv :source $MYVIMRC <Bar>
-            \ if has('gui_running') <Bar> source $MYGVIMRC <Bar> endif<Bar>
-            \ if exists(':AirlineRefresh') <Bar> AirlineRefresh <Bar> endif<CR>
 
 " Disable Ex mode (http://www.bestofvim.com/tip/leave-ex-mode-good/)
 nnoremap Q <Nop>
 
 " Switch from Search to Replace super fast!
-" nmap <expr> M ':%s/' . @/ . '//g<LEFT><LEFT>'
+nmap <expr> <Leader>s :%s/<C-v>///g<Left><Left>
+vmap <expr> <Leader>s :%s/<C-v>///g<Left><Left>

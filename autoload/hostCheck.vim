@@ -1,6 +1,5 @@
-" PER-MACHINE ==================================================================
 " Helper functions -------------------------------------------------------------
-function! s:sessionLaunchedOn(machine)
+function! hostCheck#for(machine)
   if has('unix')
     if hostname() =~? a:machine | return 1 | endif
     if empty($SSH_CONNECTION) | return 0 | endif
