@@ -1,3 +1,5 @@
+setlocal shiftwidth=2
+setlocal formatoptions+=t
 setlocal textwidth=78
 let &l:breakat = "-/ \t]"
 
