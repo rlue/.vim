@@ -1,0 +1,4 @@
+" https://github.com/vim-scripts/ReplaceWithRegister ---------------------------
+Plug 'vim-scripts/ReplaceWithRegister'
+
+" vi:ft=vim

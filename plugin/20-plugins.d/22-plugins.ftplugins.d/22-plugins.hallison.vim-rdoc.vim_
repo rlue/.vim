@@ -1,0 +1,4 @@
+" https://github.com/hallison/vim-rdoc -----------------------------------------
+Plug 'hallison/vim-rdoc'
+
+" vi:ft=vim

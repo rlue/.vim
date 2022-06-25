@@ -1,0 +1,4 @@
+" https://github.com/tpope/vim-unimpaired --------------------------------------
+Plug 'tpope/vim-unimpaired'
+
+" vi:ft=vim

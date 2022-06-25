@@ -1,0 +1,4 @@
+" https://github.com/othree/html5.vim ------------------------------------------
+Plug 'othree/html5.vim'
+
+" vi:ft=vim

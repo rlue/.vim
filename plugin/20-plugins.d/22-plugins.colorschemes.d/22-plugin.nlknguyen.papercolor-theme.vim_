@@ -1,0 +1,4 @@
+" https://github.com/NLKNguyen/papercolor-theme --------------------------------
+Plug 'NLKNguyen/papercolor-theme'
+
+" vi:ft=vim

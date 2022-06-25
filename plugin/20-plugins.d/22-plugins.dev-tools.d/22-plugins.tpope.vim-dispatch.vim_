@@ -1,0 +1,30 @@
+" https://github.com/tpope/vim-dispatch ----------------------------------------
+Plug 'tpope/vim-dispatch'
+
+nnoremap <F9> :Dispatch<CR>
+
+augroup vimrc_dispatch
+  autocmd!
+  autocmd FileType ruby
+        \ if expand('%:t:r') =~ '_spec$' | let b:dispatch = 'rspec %' | endif
+augroup END
+
+" https://github.com/rlue/vim-rspec --------------------------------------------
+Plug 'rlue/vim-rspec', { 'branch': 'feature/visual_selection' }
+
+let g:rspec_command = 'Dispatch rspec {spec}'
+
+augroup vimrc_rspec
+  autocmd!
+  autocmd FileType ruby call s:set_rspec_maps()
+augroup END
+
+function! s:set_rspec_maps()
+  nnoremap <buffer> <LocalLeader>ss :call RunCurrentSpecFile()<CR>
+  nnoremap <buffer> <LocalLeader>se :call RunExamples()<CR>
+  vnoremap <buffer> <LocalLeader>se :call RunExamples()<CR>
+  nnoremap <buffer> <LocalLeader>sr :call RunLastSpec()<CR>
+  nnoremap <buffer> <LocalLeader>sa :call RunAllSpecs()<CR>
+endfunction
+
+" vi:ft=vim

@@ -1,0 +1,4 @@
+" https://github.com/slim-template/vim-slim ------------------------------------
+Plug 'slim-template/vim-slim'
+
+" vi:ft=vim

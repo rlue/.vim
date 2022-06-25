@@ -1,0 +1,7 @@
+" https://github.com/lervag/vimtext --------------------------------------------
+Plug 'lervag/vimtex'
+
+let g:vimtex_view_method = 'mupdf'
+let g:tex_flavor = 'latex'
+
+" vi:ft=vim

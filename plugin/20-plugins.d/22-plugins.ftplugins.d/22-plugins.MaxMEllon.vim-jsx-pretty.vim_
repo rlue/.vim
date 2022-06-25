@@ -1,0 +1,4 @@
+" https://github.com/MaxMEllon/vim-jsx-pretty ----------------------------------
+Plug 'MaxMEllon/vim-jsx-pretty'
+
+" vi:ft=vim

@@ -1,0 +1,8 @@
+" https://github.com/AndrewRadev/sideways.vim ----------------------------------
+Plug 'AndrewRadev/sideways.vim'
+
+" t as in Transpose
+nnoremap <Leader>t :SidewaysLeft<CR>
+nnoremap <Leader>T :SidewaysRight<CR>
+
+" vi:ft=vim

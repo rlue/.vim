@@ -1,0 +1,4 @@
+" https://github.com/tpope/vim-liquid ------------------------------------------
+Plug 'tpope/vim-liquid'
+
+" vi:ft=vim

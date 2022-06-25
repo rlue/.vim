@@ -1,0 +1,4 @@
+" https://github.com/AndrewRadev/splitjoin.vim ---------------------------------
+Plug 'AndrewRadev/splitjoin.vim'
+
+" vi:ft=vim

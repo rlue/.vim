@@ -1,0 +1,4 @@
+" https://github.com/rlue/vim-fold-rspec ---------------------------------------
+Plug 'rlue/vim-fold-rspec'
+
+" vi:ft=vim

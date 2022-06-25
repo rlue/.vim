@@ -1,0 +1,4 @@
+" https://github.com/joker1007/vim-ruby-heredoc-syntax -------------------------
+Plug 'joker1007/vim-ruby-heredoc-syntax'
+
+" vi:ft=vim

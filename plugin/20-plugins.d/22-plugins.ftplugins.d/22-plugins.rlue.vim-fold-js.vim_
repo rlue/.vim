@@ -1,0 +1,4 @@
+" https://github.com/rlue/vim-fold-js ------------------------------------------
+Plug 'rlue/vim-fold-js'
+
+" vi:ft=vim

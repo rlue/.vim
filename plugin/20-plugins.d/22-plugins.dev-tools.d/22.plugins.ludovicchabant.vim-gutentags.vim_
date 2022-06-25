@@ -1,0 +1,13 @@
+" https://github.com/ludovicchabant/vim-gutentags ------------------------------
+if v:version < 740 || !executable('ctags') | finish | endif
+
+Plug 'ludovicchabant/vim-gutentags'
+
+let g:gutentags_exclude_project_root = ['/usr/local', $HOME . '/.config']
+let g:gutentags_file_list_command = {
+      \   'markers': {
+      \     '.git': 'git ls-files',
+      \   },
+      \ }
+
+" vi:ft=vim

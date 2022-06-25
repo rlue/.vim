@@ -1,0 +1,4 @@
+" https://github.com/mhartington/oceanic-nextvim -------------------------------
+Plug 'mhartington/oceanic-next'
+
+" vi:ft=vim
