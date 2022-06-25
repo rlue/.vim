@@ -1,4 +1,0 @@
-" https://github.com/tpope/vim-sleuth ------------------------------------------
-Plug 'tpope/vim-sleuth'
-
-" vi:ft=vim

@@ -1,4 +1,0 @@
-" https://github.com/tpope/vim-rails -------------------------------------------
-Plug 'tpope/vim-rails'
-
-" vi:ft=vim

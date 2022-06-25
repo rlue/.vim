@@ -1,4 +1,0 @@
-" https://github.com/jamessan/vim-gnupg ----------------------------------------
-Plug 'jamessan/vim-gnupg'
-
-" vi:ft=vim

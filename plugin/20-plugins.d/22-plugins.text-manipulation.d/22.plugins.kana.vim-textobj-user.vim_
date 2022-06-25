@@ -1,9 +1,0 @@
-" https://github.com/kana/vim-textobj-user -------------------------------------
-Plug 'kana/vim-textobj-user' | Plug 'reedes/vim-textobj-quote'
-
-augroup vimrc_textobj_quote
-  autocmd!
-  autocmd FileType markdown,text,mail call textobj#quote#init()
-augroup END
-
-" vi:ft=vim

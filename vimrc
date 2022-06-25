@@ -45,6 +45,6 @@ endif
 " I don't know, but plugins don't get loaded otherwise!
 " Maybe `plug#begin()` / `plug#end()` have to be invoked
 " earlier in the startup process than the `plugins/` directory gets run
-for file in split(glob($VIM_CONFIG_HOME . '/plugin/20-plugins.d/**/*.vim_'), '\n')
-  exec 'source ' . file
+for vimplug_rc in split(glob($VIM_CONFIG_HOME . '/plugin/20-plugins.d/**/*.vimrc'), '\n')
+  exec 'source ' . vimplug_rc
 endfor

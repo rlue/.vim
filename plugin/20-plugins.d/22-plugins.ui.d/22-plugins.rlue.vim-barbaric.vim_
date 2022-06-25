@@ -1,4 +1,0 @@
-" https://github.com/rlue/vim-barbaric -----------------------------------------
-Plug 'rlue/vim-barbaric'
-
-" vi:ft=vim

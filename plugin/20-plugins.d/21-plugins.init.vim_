@@ -1,3 +1,0 @@
-call plug#begin($VIM_DATA_HOME . '/plugged')
-
-" vi:ft=vim

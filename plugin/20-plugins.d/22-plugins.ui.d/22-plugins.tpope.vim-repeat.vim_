@@ -1,4 +1,0 @@
-" https://github.com/tpope/vim-repeat ------------------------------------------
-Plug 'tpope/vim-repeat'
-
-" vi:ft=vim

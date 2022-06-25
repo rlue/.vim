@@ -1,4 +1,0 @@
-" https://github.com/aklt/plantuml-syntax --------------------------------------
-Plug 'aklt/plantuml-syntax'
-
-" vi:ft=vim

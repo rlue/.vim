@@ -1,4 +1,0 @@
-" https://github.com/tpope/vim-bundler -----------------------------------------
-Plug 'tpope/vim-bundler'
-
-" vi:ft=vim

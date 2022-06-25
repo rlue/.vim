@@ -1,6 +1,0 @@
-" https://github.com/mhinz/vim-signify -----------------------------------------
-Plug 'mhinz/vim-signify'
-
-let g:signify_vcs_list = [ 'git' ]
-
-" vi:ft=vim

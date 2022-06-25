@@ -12,7 +12,7 @@ Think `~/.config/vim` > `~/.vim`? Try:
 ```bash
 # ~/.profile
 
-export VIMINIT="set nocp | source ${XDG_CONFIG_HOME:-$HOME/.config}/vim/vimrc"
+export MYVIMRC="${XDG_CONFIG_HOME:-$HOME/.config}/vim/vimrc"
 ```
 
 (Stolen from [this blog post][] by Jakub Łukasiewicz.)

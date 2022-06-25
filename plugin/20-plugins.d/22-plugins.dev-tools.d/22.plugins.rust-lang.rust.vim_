@@ -1,4 +1,0 @@
-" https://github.com/rust-lang/rust --------------------------------------------
-Plug 'rust-lang/rust'
-
-" vi:ft=vim

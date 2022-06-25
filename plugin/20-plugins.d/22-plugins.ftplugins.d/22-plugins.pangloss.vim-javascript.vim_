@@ -1,4 +1,0 @@
-" https://github.com/pangloss/vim-javascript -----------------------------------
-Plug 'pangloss/vim-javascript'
-
-" vi:ft=vim

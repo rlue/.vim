@@ -1,4 +1,0 @@
-" https://github.com/powerman/vim-plugin-AnsiEsc -------------------------------
-Plug 'powerman/vim-plugin-AnsiEsc'
-
-" vi:ft=vim

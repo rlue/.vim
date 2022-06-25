@@ -1,4 +1,0 @@
-" https://github.com/cespare/vim-toml ------------------------------------------
-Plug 'cespare/vim-toml'
-
-" vi:ft=vim

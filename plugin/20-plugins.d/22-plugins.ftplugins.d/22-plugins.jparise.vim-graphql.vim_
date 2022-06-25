@@ -1,4 +1,0 @@
-" https://github.com/jparise/vim-graphql ---------------------------------------
-Plug 'jparise/vim-graphql'
-
-" vi:ft=vim

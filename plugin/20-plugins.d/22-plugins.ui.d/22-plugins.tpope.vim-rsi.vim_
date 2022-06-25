@@ -1,4 +1,0 @@
-" https://github.com/tpope/vim-rsi ---------------------------------------------
-Plug 'tpope/vim-rsi'
-
-" vi:ft=vim
