@@ -7,15 +7,33 @@ Here are a couple of good ideas I had that might be worth trying yourself:
 XDG Spec Compliance
 -------------------
 
-Think `~/.config/vim` > `~/.vim`? Try:
+This you?
 
-```bash
-# ~/.profile
+![](https://raw.githubusercontent.com/rlue/.vim/master/i/xdg_drake.jpg)
 
-alias vim="VIMINIT='source ${XDG_CONFIG_HOME:-$HOME/.config}/vim/vimrc' vim"
-```
+Try this:
 
-(Stolen from [this blog post][] by Jakub Łukasiewicz.)
+1. ```bash
+   # ~/.profile
+
+   export VIMINIT="source ${XDG_CONFIG_HOME:-$HOME/.config}/vim/vimrc"
+   ```
+
+2. ```viml
+   " ~/.config/vim/vimrc
+   if empty($XDG_CACHE_HOME)  | let $XDG_CACHE_HOME  = $HOME . "/.cache"       | endif
+   if empty($XDG_CONFIG_HOME) | let $XDG_CONFIG_HOME = $HOME . "/.config"      | endif
+   if empty($XDG_DATA_HOME)   | let $XDG_DATA_HOME   = $HOME . "/.local/share" | endif
+
+   let &runtimepath = substitute(&runtimepath, expand("$HOME/.vim"), $XDG_CONFIG_HOME . '/vim', "g")
+   let &packpath = substitute(&packpath, expand("$HOME/.vim"), $XDG_CONFIG_HOME . '/vim', "g")
+   ```
+
+This is just the bare minimum; for a more complete setup,
+
+1. check out the [vimrc](https://github.com/rlue/.vim/blob/master/vimrc)
+2. or [the blog post I stole it from][]
+3. or just switch to Neovim.
 
 Organizing `vimrc` with Folds
 -----------------------------
@@ -23,7 +41,7 @@ Organizing `vimrc` with Folds
 Folds are amazing. Here they are in action on my `vimrc`:
 
 ```
-" ~/.vim/vimrc
+" ~/.config/vim/vimrc
 
 " PATHS ========================================================================
 " XDG compliance (adapted from https://blog.joren.ga/tools/vim-xdg) ----- [30] -
@@ -140,4 +158,4 @@ which, for instance, may not have been compiled with clipboard support.)
 
 [modularity]: https://github.com/rlue/.vim/blob/4363cea2d762d895ee9e6b69acc2184fc0b9a597/README.md#modularity
 [romainl]: https://www.reddit.com/r/vim/comments/6hz4il/two_good_ideas_for_your_vim_config_building_in/dj2ule0/
-[this blog post]: https://blog.joren.ga/tools/vim-xdg
+[the blog post I stole it from]: https://blog.joren.ga/tools/vim-xdg
