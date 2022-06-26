@@ -1,4 +1,0 @@
-if empty(glob($VIM_DATA_HOME . '/site/autoload/plug.vim'))
-  exec 'silent !curl -fLo ' . $VIM_DATA_HOME . '/site/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-endif
