@@ -12,7 +12,7 @@ Think `~/.config/vim` > `~/.vim`? Try:
 ```bash
 # ~/.profile
 
-export MYVIMRC="${XDG_CONFIG_HOME:-$HOME/.config}/vim/vimrc"
+alias vim="VIMINIT='source ${XDG_CONFIG_HOME:-$HOME/.config}/vim/vimrc' vim"
 ```
 
 (Stolen from [this blog post][] by Jakub Łukasiewicz.)

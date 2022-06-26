@@ -34,9 +34,6 @@ if !has('nvim')
   let &runtimepath = substitute(&runtimepath, expand("$HOME/.vim"), $VIM_CONFIG_HOME, "g")
   let &packpath = substitute(&packpath, expand("$HOME/.vim"), $VIM_CONFIG_HOME, "g")
   set viminfofile=$VIM_CACHE_HOME/viminfo
-else
-  let $MYVIMRC   = $VIM_CONFIG_HOME . '/init.vim'
-  let $MYGVIMRC  = $VIM_CONFIG_HOME . '/ginit.vim'
 endif
 
 " PLUGINS ======================================================================
