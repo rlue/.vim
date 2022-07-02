@@ -21,11 +21,11 @@ set packpath^=$VIM_DATA_HOME
 set packpath+=$VIM_DATA_HOME/after
 
 let g:netrw_home = $VIM_DATA_HOME
-call mkdir($VIM_DATA_HOME . "/spell", 'p', 0700)
-set viewdir=$VIM_DATA_HOME/view      | call mkdir(&viewdir, 'p', 0700)
-set backupdir=$VIM_CACHE_HOME/backup | call mkdir(&backupdir, 'p', 0700)
-set directory=$VIM_CACHE_HOME/swap   | call mkdir(&directory, 'p', 0700)
-set undodir=$VIM_CACHE_HOME/undo     | call mkdir(&undodir,   'p', 0700)
+silent! call mkdir($VIM_DATA_HOME . "/spell", 'p', 0700)
+set viewdir=$VIM_DATA_HOME/view      | silent! call mkdir(&viewdir, 'p', 0700)
+set backupdir=$VIM_CACHE_HOME/backup | silent! call mkdir(&backupdir, 'p', 0700)
+set directory=$VIM_CACHE_HOME/swap   | silent! call mkdir(&directory, 'p', 0700)
+set undodir=$VIM_CACHE_HOME/undo     | silent! call mkdir(&undodir,   'p', 0700)
 
 if !has('nvim')
   let $MYVIMRC   = $VIM_CONFIG_HOME . '/vimrc'
@@ -33,7 +33,7 @@ if !has('nvim')
 
   let &runtimepath = substitute(&runtimepath, expand("$HOME/.vim"), $VIM_CONFIG_HOME, "g")
   let &packpath = substitute(&packpath, expand("$HOME/.vim"), $VIM_CONFIG_HOME, "g")
-  set viminfofile=$VIM_CACHE_HOME/viminfo
+  if has('&viminfofile') | set viminfofile=$VIM_CACHE_HOME/viminfo | endif
 endif
 
 " PLUGINS ======================================================================
